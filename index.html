@@ -44,12 +44,22 @@
     }
 
     body {
-      background-color: var(--bg-noir);
+      background-color: #06080d;
+      /* Tactical Cyber Blueprint Dot-Grid: Glowing illuminated node circles on every line crossing */
+      background-image: 
+        radial-gradient(circle at 0px 0px, rgba(0, 242, 254, 0.42) 1.5px, transparent 2px),
+        radial-gradient(circle at 36px 36px, rgba(0, 242, 254, 0.2) 1px, transparent 1.5px),
+        linear-gradient(to right, rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
+      background-size: 36px 36px, 36px 36px, 36px 36px, 36px 36px;
+      background-position: 0 0, 0 0, 0 0, 0 0;
       color: var(--text-main);
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      position: relative;
     }
 
     /* Ambient CRT Scanline & Grain Texture */
@@ -2445,6 +2455,261 @@
       letter-spacing: 0.01em;
     }
 
+  
+    /* ==========================================================================
+       TACTICAL SENSOR SPLASH & AMBIENT GRID GLOW
+       ========================================================================== */
+    .sensor-splash-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    .sensor-ring {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+    }
+
+    .sensor-ring-primary {
+      border: 2px solid rgba(0, 242, 254, 0.9);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.85), inset 0 0 15px rgba(0, 242, 254, 0.45);
+      animation: sensorShockwave 0.7s cubic-bezier(0.1, 0.85, 0.25, 1) forwards;
+    }
+
+    .sensor-ring-secondary {
+      border: 1px dashed rgba(255, 223, 0, 0.8);
+      box-shadow: 0 0 15px rgba(255, 223, 0, 0.6);
+      animation: sensorShockwaveDashed 0.9s cubic-bezier(0.1, 0.85, 0.25, 1) forwards;
+    }
+
+    .sensor-flash {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(0, 242, 254, 0.7) 40%, rgba(0, 242, 254, 0) 72%);
+      animation: sensorFlashAnim 0.45s ease-out forwards;
+      pointer-events: none;
+    }
+
+    .sensor-crosshair {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      height: 28px;
+      pointer-events: none;
+      animation: sensorCrosshairFade 0.55s ease-out forwards;
+    }
+    .sensor-crosshair::before, .sensor-crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+    .sensor-crosshair::before {
+      top: 13px; left: 0; width: 28px; height: 2px;
+    }
+    .sensor-crosshair::after {
+      top: 0; left: 13px; width: 2px; height: 28px;
+    }
+
+    @keyframes sensorShockwave {
+      0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%) scale(0.1); }
+      60% { opacity: 0.85; }
+      100% { width: 240px; height: 240px; opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes sensorShockwaveDashed {
+      0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%) scale(0.1) rotate(0deg); }
+      100% { width: 340px; height: 340px; opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(50deg); }
+    }
+
+    @keyframes sensorFlashAnim {
+      0% { width: 0; height: 0; opacity: 1; transform: translate(-50%, -50%) scale(0.2); }
+      40% { width: 90px; height: 90px; opacity: 0.95; transform: translate(-50%, -50%) scale(1); }
+      100% { width: 150px; height: 150px; opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+    }
+
+    @keyframes sensorCrosshairFade {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    }
+
+    /* Ambient Cursor Grid Illuminator (Lag-Free 60fps GPU transform) */
+    #cursorGridAura {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 360px;
+      height: 360px;
+      margin-left: -180px;
+      margin-top: -180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.09) 0%, rgba(0, 242, 254, 0.035) 45%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform;
+      mix-blend-mode: screen;
+      transition: opacity 0.3s ease;
+    }
+
+    /* ==========================================================================
+       FLUID RESPONSIVE SYSTEM (PC, LAPTOP, TABLET, PHONES)
+       ========================================================================== */
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 85px;
+    }
+    
+    .section-header, #tools, #projects, #radarDeck, #vault, [id] {
+      scroll-margin-top: 85px;
+    }
+
+    .systems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .system-dossier-card {
+      cursor: pointer;
+    }
+    .system-dossier-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.15);
+    }
+
+    /* Modal Navigation Buttons */
+    .modal-footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 1080px) {
+      .dossier-container {
+        padding: 24px 18px 70px;
+      }
+      .noir-hero {
+        grid-template-columns: 1fr;
+        padding: 32px 24px;
+        gap: 30px;
+      }
+      .radar-deck-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hazard-ribbon {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        padding: 7px 0;
+      }
+      .hero-title {
+        font-size: clamp(2.1rem, 7.5vw, 3.2rem);
+        letter-spacing: -1px;
+      }
+      .hero-tagline {
+        font-size: 0.95rem;
+      }
+      .systems-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+      .system-dossier-card {
+        padding: 20px 18px;
+      }
+      .vault-grid {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+        gap: 14px;
+      }
+      .vault-filters {
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .vault-filter-btn {
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 0.72rem;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 40px 0 20px;
+        gap: 10px;
+      }
+      .section-title {
+        font-size: clamp(1.4rem, 6vw, 2rem);
+      }
+      .dossier-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .modal-dossier-content {
+        width: 95vw;
+        max-width: 95vw;
+        margin: 10px;
+      }
+      .modal-body {
+        padding: 16px !important;
+      }
+      #modalImg {
+        max-height: 270px !important;
+      }
+      #modalTitle {
+        font-size: 1.15rem !important;
+      }
+      #modalDesc {
+        font-size: 0.85rem !important;
+      }
+      .calc-box {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+      .radar-hud-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .attache-case {
+        transform: scale(min(1, calc(100vw / 840px)));
+        transform-origin: center center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dossier-container {
+        padding: 16px 12px 60px;
+      }
+      .hero-cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+      .hero-cta-group button {
+        width: 100%;
+        justify-content: center;
+      }
+      .tool-capsule-card {
+        min-width: 150px;
+        padding: 10px 14px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -3354,7 +3619,7 @@
     <div class="systems-grid">
       
       <!-- System 1: Hudikatura HR -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/44_project_hudikatura_hr_hardbound_capstone_book.jpg', 'Hudikatura HR Hardbound Capstone Book', 'Judiciary-grade encrypted HR system with Llama 3.3 legal summarization via Groq API. Adviser: Prof. Joel M. Olayon, May 2026.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/44_project_hudikatura_hr_hardbound_capstone_book.jpg', 'Hudikatura HR Hardbound Capstone Book', 'Enterprise judiciary-grade HR case management system featuring end-to-end field encryption (pgcrypto), role-based audit logging, and automated disciplinary grievance summarization utilizing Meta Llama 3.3 via Groq high-speed LLM inference. Built under Capstone Adviser Prof. Joel M. Olayon.', 3, 'SYS-01 // CAPSTONE 2026', 'capstone')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-01 // CAPSTONE 2026</span>
@@ -3381,7 +3646,7 @@
       </div>
 
       <!-- System 2: URSPantropiko -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/37_project_urspantropiko_registration_portal_desktop.png', 'URSPantropiko 2026 Production Suite', 'Live concert ticket pass generator and SSG master control suite deployed on Vercel: urspantropiko-ticket-suite.vercel.app.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/37_project_urspantropiko_registration_portal_desktop.png', 'URSPantropiko 2026 — Student Registration Portal & SSG Master Control Suite', 'High-concurrency concert ticket pass generator and SSG management dashboard deployed globally on Vercel (urspantropiko-ticket-suite.vercel.app). Features instant cryptographic QR validation, client-side digital pass rendering, and sub-100ms attendee check-in telemetry.', 1, 'SYS-02 // LIVE VERCEL', 'capstone')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-02 // LIVE VERCEL</span>
@@ -3407,7 +3672,7 @@
       </div>
 
       <!-- System 3: ASEAN Youth Summit Verification Suite -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/36_asean_summit_2026_web_app_user_manual_operations_guide.png', 'ASEAN Youth Summit Verification Flow & User Guide', 'Mission-critical registration and demographical logging application engineered for 100+ accredited Philippine delegates.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/36_asean_summit_2026_web_app_user_manual_operations_guide.png', 'ASEAN Youth Summit Verification Flow & User Guide', 'Mission-critical registration and demographical logging application engineered for 100+ accredited Philippine delegates representing Luzon, Visayas, and Mindanao during the ASEAN Youth Summit 2026 (Citadines Bay City & PICC Plenary Hall, Pasay).', 0, 'SYS-03 // DIPLOMACY OPS', 'asean')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-03 // DIPLOMACY OPS</span>
@@ -3432,7 +3697,7 @@
       </div>
 
       <!-- System 4: RRC Termite & Pest Control Services -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/26_qcu_pest_control_capstone_manuscript_cover.jpg', 'RRC Pest Control Operations Suite & Manuscript', 'Dual-layer enterprise information management system combining VB.NET LAN with Apache Cordova mobile app. Adviser: Ms. Teresita Cruz, MIT.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/26_qcu_pest_control_capstone_manuscript_cover.jpg', 'RRC Pest Control Operations Suite & Manuscript', 'Dual-layer enterprise information management system combining a VB.NET desktop LAN client for office controllers with an Apache Cordova mobile app for field technicians. Features automated stock level tracking and Firebase FCM push alerts. Adviser: Ms. Teresita Cruz, MIT.', 9, 'SYS-04 // CC105 CAPSTONE', 'capstone')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-04 // CC105 CAPSTONE</span>
@@ -3458,7 +3723,7 @@
       </div>
 
       <!-- System 5: MMFindr -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/34_project_mmfindr_creative_marketplace_ui.png', 'MMFindr Philippine Creative Marketplace UI', 'Specialized freelance platform matching Philippine multimedia artists, video editors, and sound designers with clients.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/34_project_mmfindr_creative_marketplace_ui.png', 'MMFindr — Philippine Multimedia Freelance Marketplace', 'Specialized freelance platform matching Philippine multimedia artists, video editors, 3D animators, and sound designers with commercial clients. Includes escrow milestones, integrated portfolio showcases, and direct messaging.', 11, 'SYS-05 // MARKETPLACE', 'capstone')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-05 // MARKETPLACE</span>
@@ -3483,7 +3748,7 @@
       </div>
 
       <!-- System 6: STULIFE -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/43_project_stulife_netbeans_java_login_ui.jpg', 'STULIFE NetBeans Java Desktop Application', 'Interactive Java desktop application developed in Apache NetBeans IDE 23 for student budget planning and meal optimization.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/43_project_stulife_netbeans_java_login_ui.jpg', 'STULIFE Desktop — Student Meal Recommendation & Daily Budget Tracker', 'Interactive Java desktop application developed in Apache NetBeans IDE 23. Implements algorithmic meal cost planning, calorie-to-price optimization algorithms, and persistent transaction history for college students.', 6, 'SYS-06 // JAVA DESKTOP', 'academic')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-06 // JAVA DESKTOP</span>
@@ -3508,7 +3773,7 @@
       </div>
 
       <!-- System 7: Basella Alba Research -->
-      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/13_olfu_stem_research_fair_oral_presentation.jpg', 'Basella Alba Bio-Packaging Scientific Defense', 'Experimental materials science investigation testing Basella Alba mucilage matrix as a biodegradable plastic alternative. OLFU STEM Research Fair.')">
+      <div class="system-dossier-card" onclick="openEvidenceModal('./portfolio_assets/13_olfu_stem_research_fair_oral_presentation.jpg', 'Basella Alba Bio-Packaging — Eco-Friendly Biocomposite Alternative', 'Experimental materials science investigation testing Basella Alba (Malabar Spinach) mucilage matrix as a biodegradable bio-plastic alternative. Defended orally at the OLFU STEM Research Fair with tensile and biodegradability benchmarking.', 26, 'SYS-07 // SCIENTIFIC RESEARCH', 'academic')">
         <div>
           <div class="system-card-header">
             <span class="system-id-badge">SYS-07 // SCIENTIFIC RESEARCH</span>
@@ -3817,6 +4082,7 @@
 
     
   <!-- Evidence Lightbox -->
+    <!-- Dossier Evidence Modal Overlay with Navigation -->
   <div class="dossier-modal" id="evidenceModal" onclick="closeEvidenceModal(event)">
     <div class="modal-dossier-content" onclick="event.stopPropagation()">
       <div class="modal-header-bar">
@@ -3824,11 +4090,20 @@
         <button class="modal-close-btn" onclick="closeEvidenceModal()">&times;</button>
       </div>
       <div class="modal-body" style="padding: 24px;">
-        <div class="modal-img-frame" style="margin-bottom: 20px;">
-          <img src="" alt="Evidence Image" id="modalImg" style="width:100%; border-radius: 6px; max-height: 420px; object-fit: cover;">
+        <div class="modal-img-frame" style="margin-bottom: 20px; background: #030508; border-radius: 8px; border: 1px solid rgba(0, 242, 254, 0.2); overflow: hidden; display: flex; justify-content: center; align-items: center;">
+          <img src="" alt="Evidence Image" id="modalImg" style="width:100%; max-height: 420px; object-fit: contain;">
         </div>
-        <h3 style="font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #fff;" id="modalTitle">Evidence Title</h3>
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 800; margin-bottom: 10px; color: #fff;" id="modalTitle">Evidence Title</h3>
         <p style="font-family: 'Inter', sans-serif; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6;" id="modalDesc">Detailed debrief of the evidence artifact.</p>
+      </div>
+      <div class="modal-footer-nav">
+        <button class="btn-noir-secondary" onclick="cycleModalPrev()" style="padding: 6px 14px; font-size: 0.78rem; display: flex; align-items: center; gap: 6px;">
+          <svg class="icon-svg" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg> PREV
+        </button>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent-cyan); letter-spacing: 1px;" id="modalCounter">ARTIFACT 1 / 40</span>
+        <button class="btn-noir-secondary" onclick="cycleModalNext()" style="padding: 6px 14px; font-size: 0.78rem; display: flex; align-items: center; gap: 6px;">
+          NEXT <svg class="icon-svg" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -4598,10 +4873,14 @@
       overlay.classList.add('active');
 
       setTimeout(() => {
-        // Scroll smoothly to target in background while heavy wooden doors are shut
+        // Scroll smoothly to target with accurate hazard ribbon offset
         if (targetHash && document.querySelector(targetHash)) {
           const el = document.querySelector(targetHash);
-          el.scrollIntoView({ behavior: 'auto' });
+          const ribbon = document.querySelector('.hazard-ribbon');
+          const ribbonHeight = ribbon ? ribbon.offsetHeight : 45;
+          const rect = el.getBoundingClientRect();
+          const targetY = rect.top + window.pageYOffset - ribbonHeight - 24;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
           el.classList.remove('crate-highlight-pulse');
           void el.offsetWidth; // Trigger reflow
           el.classList.add('crate-highlight-pulse');
@@ -5595,28 +5874,189 @@ let activeModalIndex = -1;
     
     
     // Simple Evidence Lightbox Controller
+    // =========================================================================
+    // ROBUST EVIDENCE MODAL ENGINE (NEXT/PREV NAVIGATION + PRECISE TARGETING)
+    // =========================================================================
     function openEvidenceModal(src, title, desc, index, tag, cat) {
-      if (index === undefined) index = -1;
-      if (!tag) tag = '';
-      if (!cat) cat = 'capstone';
-      activeModalIndex = (index !== -1) ? index : (vaultAssets ? vaultAssets.findIndex(a => a.src === src) : -1);
-      if (activeModalIndex === -1) activeModalIndex = 0;
-      const asset = (vaultAssets && vaultAssets[activeModalIndex]) || { src, title, desc, tag, cat };
+      // 1. Determine active index
+      if (typeof index === 'number' && index >= 0) {
+        activeModalIndex = index;
+      } else if (vaultAssets && src) {
+        const cleanSrc = src.replace(/^\.\//, '').split('/').pop();
+        const found = vaultAssets.findIndex(a => {
+          if (a.src === src) return true;
+          const aName = a.src.replace(/^\.\//, '').split('/').pop();
+          return aName === cleanSrc;
+        });
+        activeModalIndex = (found !== -1) ? found : -1;
+      } else {
+        activeModalIndex = -1;
+      }
+
+      // 2. Explicit arguments ALWAYS take precedence
+      const asset = (activeModalIndex !== -1 && vaultAssets && vaultAssets[activeModalIndex]) ? vaultAssets[activeModalIndex] : null;
+
+      const finalSrc = src || (asset && asset.src) || '';
+      const finalTitle = title || (asset && asset.title) || 'Evidence Artifact';
+      const finalDesc = desc || (asset && asset.desc) || '';
+      const finalTag = tag || (asset && asset.tag) || (cat ? `SYS // ${cat.toUpperCase()}` : 'DECLASSIFIED EVIDENCE');
+      const finalCat = cat || (asset && asset.cat) || 'capstone';
+
       const imgEl = document.getElementById('modalImg');
-      if (imgEl) imgEl.src = asset.src || src;
+      if (imgEl) {
+        imgEl.src = finalSrc;
+        imgEl.alt = finalTitle;
+      }
       const titleEl = document.getElementById('modalTitle');
-      if (titleEl) titleEl.innerText = asset.title || title || '';
+      if (titleEl) titleEl.innerText = finalTitle;
+
       const descEl = document.getElementById('modalDesc');
-      if (descEl) descEl.innerText = asset.desc || desc || '';
+      if (descEl) descEl.innerText = finalDesc;
+
       const catTag = document.getElementById('modalCategoryTag');
-      if (catTag) catTag.innerText = '/// DECLASSIFIED EVIDENCE // ' + (asset.cat || cat).toUpperCase() + ' ///';
+      if (catTag) {
+        catTag.innerText = finalTag.startsWith('///') ? finalTag : `/// DECLASSIFIED EVIDENCE // ${finalTag} ///`;
+      }
+
+      const counterEl = document.getElementById('modalCounter');
+      if (counterEl) {
+        if (activeModalIndex !== -1 && vaultAssets) {
+          counterEl.innerText = `ARTIFACT ${activeModalIndex + 1} / ${vaultAssets.length}`;
+        } else {
+          counterEl.innerText = `CLASSIFIED EVIDENCE ITEM`;
+        }
+      }
+
       const modal = document.getElementById('evidenceModal');
-      if (modal) modal.classList.add('active');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }
+
     function closeEvidenceModal(e) {
+      if (e && e.target && e.target.closest && e.target.closest('.modal-dossier-content') && !e.target.classList.contains('modal-close-btn')) {
+        return;
+      }
       const modal = document.getElementById('evidenceModal');
-      if (modal) modal.classList.remove('active');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     }
+
+    function cycleModalNext() {
+      if (!vaultAssets || !vaultAssets.length) return;
+      if (activeModalIndex === -1) activeModalIndex = 0;
+      else activeModalIndex = (activeModalIndex + 1) % vaultAssets.length;
+      const asset = vaultAssets[activeModalIndex];
+      openEvidenceModal(asset.src, asset.title, asset.desc, activeModalIndex, asset.tag, asset.cat);
+    }
+
+    function cycleModalPrev() {
+      if (!vaultAssets || !vaultAssets.length) return;
+      if (activeModalIndex === -1) activeModalIndex = 0;
+      else activeModalIndex = (activeModalIndex - 1 + vaultAssets.length) % vaultAssets.length;
+      const asset = vaultAssets[activeModalIndex];
+      openEvidenceModal(asset.src, asset.title, asset.desc, activeModalIndex, asset.tag, asset.cat);
+    }
+
+    // Keyboard navigation for modal (ESC to close, Left/Right arrows to cycle)
+    window.addEventListener('keydown', function(e) {
+      const modal = document.getElementById('evidenceModal');
+      if (!modal || !modal.classList.contains('active')) return;
+      if (e.key === 'Escape') closeEvidenceModal();
+      if (e.key === 'ArrowRight') cycleModalNext();
+      if (e.key === 'ArrowLeft') cycleModalPrev();
+    });
+
+    // =========================================================================
+    // INTERACTIVE TACTICAL SENSOR SPLASH & CURSOR GRID AURA
+    // =========================================================================
+    window.addEventListener('click', function(e) {
+      // Trigger sensory splash ripple anywhere clicked
+      triggerSensorSplash(e.clientX, e.clientY);
+    });
+
+    function triggerSensorSplash(x, y) {
+      let container = document.getElementById('sensorSplashContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'sensorSplashContainer';
+        container.className = 'sensor-splash-container';
+        document.body.appendChild(container);
+      }
+
+      const flash = document.createElement('div');
+      flash.className = 'sensor-flash';
+      flash.style.left = x + 'px';
+      flash.style.top = y + 'px';
+
+      const ring1 = document.createElement('div');
+      ring1.className = 'sensor-ring sensor-ring-primary';
+      ring1.style.left = x + 'px';
+      ring1.style.top = y + 'px';
+
+      const ring2 = document.createElement('div');
+      ring2.className = 'sensor-ring sensor-ring-secondary';
+      ring2.style.left = x + 'px';
+      ring2.style.top = y + 'px';
+
+      const cross = document.createElement('div');
+      cross.className = 'sensor-crosshair';
+      cross.style.left = x + 'px';
+      cross.style.top = y + 'px';
+
+      container.appendChild(flash);
+      container.appendChild(ring1);
+      container.appendChild(ring2);
+      container.appendChild(cross);
+
+      playSensorPing();
+
+      setTimeout(() => {
+        flash.remove();
+        ring1.remove();
+        ring2.remove();
+        cross.remove();
+      }, 900);
+    }
+
+    function playSensorPing() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.035, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } catch(err) {}
+    }
+
+    // High-performance cursor ambient grid aura
+    let auraEl = null;
+    let lastMove = 0;
+    window.addEventListener('mousemove', function(e) {
+      const now = performance.now();
+      if (now - lastMove < 16) return;
+      lastMove = now;
+      if (!auraEl) {
+        auraEl = document.getElementById('cursorGridAura');
+        if (!auraEl) {
+          auraEl = document.createElement('div');
+          auraEl.id = 'cursorGridAura';
+          document.body.appendChild(auraEl);
+        }
+      }
+      auraEl.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    });
 
 
 
