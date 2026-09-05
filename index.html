@@ -2727,7 +2727,7 @@
 
     <div style="position: absolute; top: calc(7vh + 16px); right: 28px; z-index: 100; display: flex; gap: 10px;">
       <button class="intro-skip-btn" id="introAudioToggleBtn" onclick="toggleIntroSoundtrack()" style="position: static;">
-        <span id="introAudioIcon">🔊</span> SOUNDTRACK: ON
+        <span id="introAudioIcon"><svg class="icon-svg" style="width: 14px; height: 14px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></span> SOUNDTRACK: ON
       </button>
       <button class="intro-skip-btn" onclick="dismissIntro()" style="position: static;">
         <svg class="icon-svg" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
@@ -4005,16 +4005,16 @@
       <div class="radar-control-bar">
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <button class="crate-dock-btn" onclick="toggleRadarSweepSpeed()">
-            Sweep Speed: <span id="radarSpeedText" style="color: var(--accent-yellow);">1.0x NORMAL</span>
+            <svg class="icon-svg" style="width: 13px; height: 13px; vertical-align: -2px; color: var(--accent-yellow);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg> Sweep Speed: <span id="radarSpeedText" style="color: var(--accent-yellow);">1.0x NORMAL</span>
           </button>
           <button class="crate-dock-btn" onclick="cycleRadarRange()">
-            Range Zoom: <span id="radarRangeBtnText" style="color: var(--accent-cyan);">50 KM</span>
+            <svg class="icon-svg" style="width: 13px; height: 13px; vertical-align: -2px; color: var(--accent-cyan);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Range Zoom: <span id="radarRangeBtnText" style="color: var(--accent-cyan);">50 KM</span>
           </button>
           <button class="crate-dock-btn" onclick="toggleSonarAudio()" id="sonarAudioBtn">
-            🔊 Sonar Audio: ON
+            <span id="sonarAudioIcon"><svg class="icon-svg" style="width: 13px; height: 13px; vertical-align: -2px; color: var(--accent-green);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></span> Sonar Audio: <span id="sonarAudioState" style="color: var(--accent-green);">ON</span>
           </button>
           <button class="crate-dock-btn" onclick="pingRadarNow()">
-            ⚡ Manual Pulse Ping
+            <svg class="icon-svg" style="width: 13px; height: 13px; vertical-align: -2px; color: var(--accent-yellow);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Manual Pulse Ping
           </button>
         </div>
         <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted);">
@@ -4349,13 +4349,13 @@
       introSoundtrackMuted = !introSoundtrackMuted;
       if (introSoundtrackMuted) {
         if (audio) audio.pause();
-        if (btn) btn.innerHTML = '<span id="introAudioIcon">🔇</span> SOUNDTRACK: OFF';
+        if (btn) btn.innerHTML = '<span id="introAudioIcon"><svg class="icon-svg" style="width: 14px; height: 14px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg></span> SOUNDTRACK: OFF';
       } else {
         if (audio && !document.getElementById('noirIntroOverlay').classList.contains('hidden') && (biometricHoldActive || introSequenceStarted)) {
           audio.volume = 0.85;
           audio.play().catch(() => {});
         }
-        if (btn) btn.innerHTML = '<span id="introAudioIcon">🔊</span> SOUNDTRACK: ON';
+        if (btn) btn.innerHTML = '<span id="introAudioIcon"><svg class="icon-svg" style="width: 14px; height: 14px; vertical-align: -2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></span> SOUNDTRACK: ON';
       }
     }
 
@@ -5003,9 +5003,10 @@
         let closestDist = Infinity;
         let closestIdx = -1;
 
+        const currentZoom = (typeof radarRangeConfigs !== 'undefined' && radarRangeConfigs[radarRangeIndex]) ? radarRangeConfigs[radarRangeIndex].zoom : 1.0;
         radarNodes.forEach((node, idx) => {
           const rad = (node.angle * Math.PI) / 180;
-          const r = node.dist * maxR;
+          const r = Math.min(maxR - 8, node.dist * maxR * currentZoom);
           const blipX = cx + Math.cos(rad) * r;
           const blipY = cy + Math.sin(rad) * r;
           const d = Math.hypot(clickX - blipX, clickY - blipY);
@@ -5050,8 +5051,9 @@
 
           // Range markings
           ctx.font = '9px "JetBrains Mono", monospace';
-          ctx.fillStyle = 'rgba(0, 242, 254, 0.5)';
-          ctx.fillText(`${Math.round(parseInt(radarRanges[radarRangeIndex]) * fraction)}K`, cx + 6, cy - (maxR * fraction) + 12);
+          ctx.fillStyle = 'rgba(0, 242, 254, 0.6)';
+          const maxKm = (typeof radarRangeConfigs !== 'undefined' && radarRangeConfigs[radarRangeIndex]) ? radarRangeConfigs[radarRangeIndex].kmMax : parseInt(radarRanges[radarRangeIndex]);
+          ctx.fillText(`${Math.round(maxKm * fraction)} KM`, cx + 6, cy - (maxR * fraction) + 12);
         });
 
         // Crosshairs & diagonal bearings
@@ -5118,10 +5120,11 @@
           }
         });
 
-        // Render Radar Target Blips
+        // Render Radar Target Blips with Active Zoom Scaling
+        const currentZoom = (typeof radarRangeConfigs !== 'undefined' && radarRangeConfigs[radarRangeIndex]) ? radarRangeConfigs[radarRangeIndex].zoom : 1.0;
         radarNodes.forEach((node, idx) => {
           const rad = (node.angle * Math.PI) / 180;
-          const r = node.dist * maxR;
+          const r = Math.min(maxR - 8, node.dist * maxR * currentZoom);
           const bx = cx + Math.cos(rad) * r;
           const by = cy + Math.sin(rad) * r;
 
@@ -5296,19 +5299,32 @@
     }
 
     function cycleRadarRange() {
-      radarRangeIndex = (radarRangeIndex + 1) % radarRanges.length;
-      const range = radarRanges[radarRangeIndex];
+      radarRangeIndex = (radarRangeIndex + 1) % radarRangeConfigs.length;
+      const config = radarRangeConfigs[radarRangeIndex];
       const rangeLabel = document.getElementById('radarRangeLabel');
       const btnTxt = document.getElementById('radarRangeBtnText');
-      if (rangeLabel) rangeLabel.innerText = range;
-      if (btnTxt) btnTxt.innerText = range;
-      playSonarPing(600, 0.2);
+      if (rangeLabel) rangeLabel.innerText = config.label;
+      if (btnTxt) btnTxt.innerText = config.label;
+
+      // Expand visual sonar ripple on zoom level shift
+      manualPingRings.push({ r: 12, alpha: 0.85 });
+      playSonarPing(720, 0.18);
     }
 
     function toggleSonarAudio() {
       sonarAudioEnabled = !sonarAudioEnabled;
       const btn = document.getElementById('sonarAudioBtn');
-      if (btn) btn.innerText = sonarAudioEnabled ? '🔊 Sonar Audio: ON' : '🔇 Sonar Audio: OFF';
+      const icon = document.getElementById('sonarAudioIcon');
+      const state = document.getElementById('sonarAudioState');
+      if (icon) {
+        icon.innerHTML = sonarAudioEnabled ?
+          '<svg class="icon-svg" style="width: 13px; height: 13px; vertical-align: -2px; color: var(--accent-green);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>' :
+          '<svg class="icon-svg" style="width: 13px; height: 13px; vertical-align: -2px; color: var(--text-muted);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>';
+      }
+      if (state) {
+        state.innerText = sonarAudioEnabled ? 'ON' : 'OFF';
+        state.style.color = sonarAudioEnabled ? 'var(--accent-green)' : 'var(--text-muted)';
+      }
       if (sonarAudioEnabled) playSonarPing(880, 0.2);
     }
 
@@ -5770,95 +5786,282 @@
     renderVault('all');
     renderMarqueeCarousels();
 
-    // Flappy Dev Retro Game Engine
-    const canvas = document.getElementById('flappyCanvas');
-    const ctx = canvas.getContext('2d');
-    let birdY = 120;
+    // =========================================================================
+    // FLAPPY DEV 8086 RETRO GAME ENGINE (SMOOTH PROGRESSION + ZERO SPACE-SCROLL)
+    // =========================================================================
+    const flappyCanvas = document.getElementById('flappyCanvas');
+    const fCtx = flappyCanvas ? flappyCanvas.getContext('2d') : null;
+    let birdY = 125;
     let birdVel = 0;
-    const gravity = 0.25;
-    let pipes = [];
-    let score = 0;
-    let isDead = false;
+    const flappyGravity = 0.22;
+    let flappyPipes = [];
+    let flappyScore = 0;
+    let flappyHighScore = parseInt(localStorage.getItem('noir_flappy_best') || '0', 10);
+    let isFlappyDead = false;
+    let flappyParticles = [];
+    let flappyFrame = 0;
 
     function resetFlappy() {
       birdY = 120;
-      birdVel = -4.5;
-      pipes = [];
-      score = 0;
-      isDead = false;
+      birdVel = -4.0;
+      flappyPipes = [];
+      flappyScore = 0;
+      isFlappyDead = false;
+      flappyParticles = [];
+      play8BitTone(600, 0.08, 'square');
     }
 
-    canvas.addEventListener('click', () => {
-      if (isDead) resetFlappy();
-      else birdVel = -4.5;
-    });
+    function flappyJump() {
+      if (isFlappyDead) {
+        resetFlappy();
+      } else {
+        birdVel = -3.9;
+        play8BitTone(750, 0.06, 'triangle');
+        // Spawn engine thruster particles
+        for (let i = 0; i < 4; i++) {
+          flappyParticles.push({
+            x: 46,
+            y: birdY + 10 + (Math.random() * 4 - 2),
+            vx: -Math.random() * 2.5 - 1,
+            vy: (Math.random() - 0.5) * 1.5,
+            life: 1.0,
+            color: Math.random() > 0.5 ? '#00f2fe' : '#ffdf00'
+          });
+        }
+      }
+    }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        if (isDead) resetFlappy();
-        else birdVel = -4.5;
+    if (flappyCanvas) {
+      flappyCanvas.addEventListener('click', (e) => {
+        e.preventDefault();
+        flappyJump();
+      });
+      // Touch support for mobile phones & tablets
+      flappyCanvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        flappyJump();
+      }, { passive: false });
+    }
+
+    // Key listener with strict preventDefault on Space
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.key === ' ') {
+        if (flappyCanvas) {
+          const rect = flappyCanvas.getBoundingClientRect();
+          const inView = (rect.top < window.innerHeight && rect.bottom > 0);
+          if (inView) {
+            e.preventDefault(); // Stop default page scroll!
+            flappyJump();
+          }
+        }
       }
     });
+
+    function play8BitTone(freq, duration, waveType = 'square') {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = waveType;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (err) {}
+    }
 
     function runFlappyEngine() {
-      ctx.fillStyle = '#05080c';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (!flappyCanvas || !fCtx) return;
+      flappyFrame++;
+      const w = flappyCanvas.width;
+      const h = flappyCanvas.height;
 
-      if (!isDead) {
-        birdVel += gravity;
+      // Dark cyber background with scrolling circuit grid
+      fCtx.fillStyle = '#04070b';
+      fCtx.fillRect(0, 0, w, h);
+
+      // Moving faint vertical circuit lines
+      fCtx.strokeStyle = 'rgba(0, 242, 254, 0.05)';
+      fCtx.lineWidth = 1;
+      const gridOffset = (flappyFrame * 0.8) % 24;
+      for (let x = -gridOffset; x < w; x += 24) {
+        fCtx.beginPath();
+        fCtx.moveTo(x, 0);
+        fCtx.lineTo(x, h);
+        fCtx.stroke();
+      }
+
+      // Progressive difficulty: starts gentle at 1.5, caps at 3.6
+      const currentSpeed = Math.min(3.6, 1.5 + flappyScore * 0.08);
+      // Generous starting gap of 130px, gradually down to 92px
+      const currentGap = Math.max(92, 130 - flappyScore * 1.4);
+      // Pipe spacing starts at 220px, narrows to 160px
+      const spawnSpacing = Math.max(160, 220 - flappyScore * 2.5);
+
+      if (!isFlappyDead) {
+        birdVel += flappyGravity;
         birdY += birdVel;
 
-        if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 160) {
-          const gap = 85;
-          const topH = Math.random() * (canvas.height - gap - 60) + 20;
-          pipes.push({ x: canvas.width, top: topH, bottom: canvas.height - topH - gap, passed: false });
+        // Pipe spawn
+        if (flappyPipes.length === 0 || flappyPipes[flappyPipes.length - 1].x < w - spawnSpacing) {
+          const topH = Math.random() * (h - currentGap - 60) + 25;
+          flappyPipes.push({
+            x: w,
+            top: topH,
+            bottom: h - topH - currentGap,
+            passed: false
+          });
         }
 
-        ctx.fillStyle = '#00ff88';
-        for (let i = 0; i < pipes.length; i++) {
-          const p = pipes[i];
-          p.x -= 2;
+        // Process pipes (server racks)
+        for (let i = 0; i < flappyPipes.length; i++) {
+          const p = flappyPipes[i];
+          p.x -= currentSpeed;
 
-          ctx.fillRect(p.x, 0, 36, p.top);
-          ctx.fillRect(p.x, canvas.height - p.bottom, 36, p.bottom);
+          // Top server rack
+          fCtx.fillStyle = '#0d1822';
+          fCtx.fillRect(p.x, 0, 38, p.top);
+          fCtx.strokeStyle = '#00ff88';
+          fCtx.lineWidth = 1.5;
+          fCtx.strokeRect(p.x, 0, 38, p.top);
 
+          // Rack LED indicators
+          fCtx.fillStyle = (flappyFrame % 40 < 20) ? '#00ff88' : '#ffdf00';
+          fCtx.fillRect(p.x + 8, Math.max(6, p.top - 14), 4, 4);
+          fCtx.fillStyle = '#00f2fe';
+          fCtx.fillRect(p.x + 18, Math.max(6, p.top - 14), 4, 4);
+
+          // Bottom server rack
+          const bY = h - p.bottom;
+          fCtx.fillStyle = '#0d1822';
+          fCtx.fillRect(p.x, bY, 38, p.bottom);
+          fCtx.strokeStyle = '#00ff88';
+          fCtx.lineWidth = 1.5;
+          fCtx.strokeRect(p.x, bY, 38, p.bottom);
+
+          fCtx.fillStyle = '#00f2fe';
+          fCtx.fillRect(p.x + 8, bY + 8, 4, 4);
+          fCtx.fillStyle = (flappyFrame % 30 < 15) ? '#ff3344' : '#00ff88';
+          fCtx.fillRect(p.x + 18, bY + 8, 4, 4);
+
+          // Collision detection (with a 2px forgiving margin)
           if (
-            (p.x < 65 && p.x + 36 > 45) &&
-            (birdY < p.top || birdY + 16 > canvas.height - p.bottom)
+            (p.x < 66 && p.x + 38 > 46) &&
+            (birdY + 2 < p.top || birdY + 16 > bY)
           ) {
-            isDead = true;
+            isFlappyDead = true;
+            play8BitTone(180, 0.35, 'sawtooth');
+            if (flappyScore > flappyHighScore) {
+              flappyHighScore = flappyScore;
+              localStorage.setItem('noir_flappy_best', flappyHighScore);
+            }
           }
 
-          if (p.x + 36 < 45 && !p.passed) {
-            score++;
+          // Score point
+          if (p.x + 38 < 46 && !p.passed) {
+            flappyScore++;
             p.passed = true;
+            play8BitTone(920, 0.1, 'sine');
           }
         }
 
-        pipes = pipes.filter(p => p.x > -50);
+        flappyPipes = flappyPipes.filter(p => p.x > -50);
 
-        if (birdY > canvas.height - 16 || birdY < 0) {
-          isDead = true;
+        // Floor / Ceiling crash
+        if (birdY > h - 18 || birdY < 0) {
+          isFlappyDead = true;
+          play8BitTone(150, 0.3, 'sawtooth');
+          if (flappyScore > flappyHighScore) {
+            flappyHighScore = flappyScore;
+            localStorage.setItem('noir_flappy_best', flappyHighScore);
+          }
         }
       }
 
-      // Draw Pixel Player Chip
-      ctx.fillStyle = '#00f2fe';
-      ctx.fillRect(45, birdY, 18, 18);
-      ctx.fillStyle = '#ffdf00';
-      ctx.fillRect(52, birdY + 4, 5, 5);
+      // Update & draw thruster particle trail
+      for (let i = flappyParticles.length - 1; i >= 0; i--) {
+        const pt = flappyParticles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.life -= 0.05;
+        if (pt.life <= 0) {
+          flappyParticles.splice(i, 1);
+          continue;
+        }
+        fCtx.fillStyle = pt.color;
+        fCtx.globalAlpha = pt.life;
+        fCtx.fillRect(pt.x, pt.y, 2.5, 2.5);
+      }
+      fCtx.globalAlpha = 1.0;
 
-      // Draw Telemetry Score
-      ctx.fillStyle = '#fff';
-      ctx.font = '13px JetBrains Mono';
-      ctx.fillText(`SCORE: ${score}`, 16, 24);
+      // Draw Player: 8086 Microprocessor Chip
+      fCtx.save();
+      fCtx.translate(54, birdY + 9);
+      // Tilt chip based on velocity
+      const tilt = Math.max(-0.4, Math.min(0.5, birdVel * 0.08));
+      fCtx.rotate(tilt);
 
-      if (isDead) {
-        ctx.fillStyle = 'rgba(0,0,0,0.8)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#ff3344';
-        ctx.font = 'bold 16px JetBrains Mono';
-        ctx.fillText('CRASHED! CLICK / SPACE TO RESTART', 70, canvas.height / 2);
+      // Gold Pins
+      fCtx.fillStyle = '#ffdf00';
+      fCtx.fillRect(-12, -7, 2, 14);
+      fCtx.fillRect(10, -7, 2, 14);
+
+      // Black Silicon Body
+      fCtx.fillStyle = '#10141c';
+      fCtx.fillRect(-10, -8, 20, 16);
+      fCtx.strokeStyle = '#00f2fe';
+      fCtx.lineWidth = 1.5;
+      fCtx.strokeRect(-10, -8, 20, 16);
+
+      // Cyan Core LED
+      fCtx.fillStyle = isFlappyDead ? '#ff3344' : '#00f2fe';
+      fCtx.shadowColor = isFlappyDead ? '#ff3344' : '#00f2fe';
+      fCtx.shadowBlur = 8;
+      fCtx.fillRect(-4, -4, 8, 8);
+      fCtx.shadowBlur = 0;
+
+      // Micro text "8086"
+      fCtx.fillStyle = '#fff';
+      fCtx.font = '6px "JetBrains Mono", monospace';
+      fCtx.fillText('86', -3, 3);
+      fCtx.restore();
+
+      // HUD Telemetry Header
+      fCtx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      fCtx.fillRect(0, 0, w, 28);
+      fCtx.strokeStyle = 'rgba(0, 242, 254, 0.2)';
+      fCtx.lineWidth = 1;
+      fCtx.strokeRect(0, 0, w, 28);
+
+      fCtx.font = 'bold 12px "JetBrains Mono", monospace';
+      fCtx.fillStyle = '#00ff88';
+      fCtx.fillText(`SCORE: ${flappyScore}`, 14, 18);
+
+      fCtx.fillStyle = '#ffdf00';
+      fCtx.fillText(`BEST: ${flappyHighScore}`, 110, 18);
+
+      fCtx.fillStyle = 'var(--accent-cyan)';
+      fCtx.fillStyle = '#00f2fe';
+      fCtx.fillText(`SPEED: ${currentSpeed.toFixed(1)}x`, w - 100, 18);
+
+      // Dead overlay
+      if (isFlappyDead) {
+        fCtx.fillStyle = 'rgba(3, 6, 12, 0.85)';
+        fCtx.fillRect(0, 28, w, h - 28);
+
+        fCtx.font = 'bold 16px "Syne", sans-serif';
+        fCtx.fillStyle = '#ff3344';
+        fCtx.textAlign = 'center';
+        fCtx.fillText('SYSTEM OVERHEAT // CRASHED', w / 2, h / 2 - 10);
+
+        fCtx.font = '11px "JetBrains Mono", monospace';
+        fCtx.fillStyle = '#00f2fe';
+        fCtx.fillText('CLICK CANVAS OR PRESS [SPACE] TO REBOOT CORE', w / 2, h / 2 + 18);
+        fCtx.textAlign = 'left';
       }
 
       requestAnimationFrame(runFlappyEngine);
@@ -6012,7 +6215,7 @@ let activeModalIndex = -1;
       container.appendChild(ring2);
       container.appendChild(cross);
 
-      playSensorPing();
+      // // playSensorPing(); (Silent click)
 
       setTimeout(() => {
         flash.remove();
