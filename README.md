@@ -57,6 +57,8 @@ Built with obsession, not templates.
 
 ## Live Deployment
 
-- **Primary Vercel Production**: [https://noir-portfolio-noir-80a7.vercel.app](https://noir-portfolio-noir-80a7.vercel.app)
+- **Primary Custom Alias**: [https://noir-et-blancc66dev.vercel.app](https://noir-et-blancc66dev.vercel.app)
+- **Secondary Alias**: [https://noir-et-blancc66-dev.vercel.app](https://noir-et-blancc66-dev.vercel.app)
+- **Vercel Project URL**: [https://noir-portfolio-noir-80a7.vercel.app](https://noir-portfolio-noir-80a7.vercel.app)
 - **GitHub Pages Live Mirror**: [https://nbyakul31-prog.github.io/noir-portfolio/](https://nbyakul31-prog.github.io/noir-portfolio/)
 
