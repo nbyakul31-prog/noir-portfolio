@@ -57,7 +57,6 @@ Built with obsession, not templates.
 
 ## Live Deployment
 
-- **Primary Vercel Production**: [https://noir-et-blancc66dev.vercel.app](https://noir-et-blancc66dev.vercel.app)
-- **Alternative Mirror**: [https://noiretblancc66dev.vercel.app](https://noiretblancc66dev.vercel.app)
-- **GitHub Pages Fallback**: [https://nbyakul31-prog.github.io/noir-portfolio/](https://nbyakul31-prog.github.io/noir-portfolio/)
+- **Primary Vercel Production**: [https://noir-portfolio-noir-80a7.vercel.app](https://noir-portfolio-noir-80a7.vercel.app)
+- **GitHub Pages Live Mirror**: [https://nbyakul31-prog.github.io/noir-portfolio/](https://nbyakul31-prog.github.io/noir-portfolio/)
 
