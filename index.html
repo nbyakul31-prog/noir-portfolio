@@ -37,6 +37,7 @@
       --hazard-stripe-2: #000000;
       --ease-framer: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-snap: cubic-bezier(0.85, 0, 0.15, 1);
+      --container-h-pad: 24px;
     }
 
     * {
@@ -273,28 +274,41 @@
     }
 
     .biometric-scanner-card {
-      background: rgba(10, 16, 26, 0.85);
+      background: rgba(10, 16, 26, 0.90);
       border: 2px solid var(--accent-cyan);
       border-radius: 20px;
       padding: 36px 40px;
       max-width: 480px;
-      width: 100%;
+      width: min(480px, 92vw);
       box-shadow: 0 0 60px rgba(0, 242, 254, 0.25), inset 0 0 30px rgba(0, 242, 254, 0.1);
-      backdrop-filter: blur(15px);
+      backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .biometric-scanner-card.holding {
+      border-color: rgba(0, 255, 136, 0.75);
+      box-shadow: 0 0 60px rgba(0, 255, 136, 0.3), inset 0 0 30px rgba(0, 255, 136, 0.12);
     }
     .biometric-pad-wrapper {
       position: relative;
       width: 160px;
       height: 160px;
+      border-radius: 50% !important;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 20px 0;
+      margin: 18px 0;
       user-select: none;
       -webkit-user-select: none;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
     }
     .biometric-progress-ring {
       position: absolute;
@@ -326,10 +340,10 @@
     .biometric-scanner-pad {
       width: 125px;
       height: 125px;
-      border-radius: 50%;
+      border-radius: 50% !important;
       background: radial-gradient(circle at center, #071828 0%, #030810 100%);
       border: 3px solid var(--accent-cyan);
-      box-shadow: 0 0 40px rgba(0, 242, 254, 0.4), inset 0 0 20px rgba(0, 242, 254, 0.3);
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.4), inset 0 0 20px rgba(0, 242, 254, 0.3);
       position: relative;
       cursor: pointer;
       display: flex;
@@ -340,16 +354,41 @@
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none;
     }
     .biometric-scanner-pad:hover {
       transform: scale(1.04);
-      box-shadow: 0 0 60px rgba(0, 242, 254, 0.7), inset 0 0 30px rgba(0, 242, 254, 0.5);
+      box-shadow: 0 0 50px rgba(0, 242, 254, 0.7), inset 0 0 25px rgba(0, 242, 254, 0.4);
       border-color: #fff;
     }
+    .biometric-scanner-pad:active,
     .biometric-scanner-pad.holding {
       transform: scale(0.96);
-      border-color: var(--accent-green);
-      box-shadow: 0 0 70px rgba(0, 255, 136, 0.8), inset 0 0 25px rgba(0, 255, 136, 0.5);
+      border-color: var(--accent-green) !important;
+      border-radius: 50% !important;
+      box-shadow: 
+        0 0 0 6px rgba(0, 255, 136, 0.25),
+        0 0 40px rgba(0, 255, 136, 0.8),
+        0 0 80px rgba(0, 255, 136, 0.45),
+        inset 0 0 25px rgba(0, 255, 136, 0.5) !important;
+    }
+    .biometric-scanner-pad::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50% !important;
+      border: 2px solid transparent;
+      pointer-events: none;
+    }
+    .biometric-scanner-pad.holding::after {
+      border-color: rgba(0, 255, 136, 0.65);
+      animation: biometricCircleRipple 1.1s ease-out infinite;
+    }
+    @keyframes biometricCircleRipple {
+      0% { transform: scale(0.92); opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
     }
     .biometric-laser-line {
       position: absolute;
@@ -694,6 +733,20 @@
     }
 
     /* SCENE 4: Manila Classified Dossier with Clean Proportions */
+    .attache-interior-glow {
+      position: absolute;
+      inset: 8px;
+      border-radius: 10px;
+      background: radial-gradient(ellipse at center, rgba(255, 223, 0, 0.28) 0%, rgba(0, 242, 254, 0.12) 50%, transparent 80%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 5;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .attache-interior-glow.active {
+      opacity: 1;
+    }
+
     .manila-case-folder {
       width: 100%;
       height: 100%;
@@ -708,12 +761,12 @@
       justify-content: space-between;
       z-index: 12;
       opacity: 0;
-      transform: translateY(20px) scale(0.96);
-      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(65px) scale(0.65) rotateX(25deg);
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
     }
     .manila-case-folder.visible {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0) scale(1) rotateX(0deg);
     }
 
     .folder-tab {
@@ -770,69 +823,104 @@
       opacity: 1;
     }
 
-    /* Distressed Newspaper Clippings Pinned Beside the Case */
+    /* Distressed Newspaper Clippings Pinned Neatly Inside the Case */
     .folder-news-clipping {
-      background: #fdfaf2;
+      background: #f3edd9;
+      background-image: linear-gradient(to bottom, #f7f2e4 0%, #ece2c6 100%);
       color: #1a1a1a;
-      padding: 10px 12px;
-      border-radius: 3px;
-      border: 1px solid rgba(0,0,0,0.3);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.9);
-      font-family: 'Times New Roman', serif;
+      padding: 8px 10px;
+      border: 1px solid rgba(120, 100, 70, 0.4);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.85);
+      font-family: 'Times New Roman', Times, serif;
       position: absolute;
-      z-index: 24;
+      z-index: 22;
       opacity: 0;
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
       pointer-events: none;
-      width: 155px;
+      width: 160px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+      /* Jagged torn newspaper trimming effect */
+      clip-path: polygon(
+        0% 3px, 4% 0px, 8% 3px, 14% 1px, 20% 4px, 27% 0px, 35% 3px, 44% 1px, 53% 4px, 62% 0px, 71% 3px, 80% 1px, 89% 4px, 96% 0px, 100% 3px,
+        100% calc(100% - 3px), 96% 100%, 89% calc(100% - 2px), 80% 100%, 71% calc(100% - 3px), 62% 100%, 53% calc(100% - 2px), 44% 100%, 35% calc(100% - 3px), 27% 100%, 20% calc(100% - 2px), 14% 100%, 8% calc(100% - 3px), 4% 100%, 0% calc(100% - 2px)
+      );
     }
     .clipping-headline {
-      font-family: 'Syne', serif;
-      font-size: 0.68rem;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 0.65rem;
       font-weight: 900;
-      line-height: 1.2;
+      line-height: 1.15;
       text-transform: uppercase;
-      border-bottom: 2px solid #111;
-      padding-bottom: 3px;
+      border-bottom: 1.5px solid #222;
+      padding-bottom: 2px;
       margin-bottom: 4px;
+      letter-spacing: 0.5px;
+      color: #111;
     }
     .clipping-body {
-      font-size: 0.52rem;
-      line-height: 1.3;
-      color: #333;
+      font-size: 0.51rem;
+      line-height: 1.25;
+      color: #2b2b2b;
     }
-    .news-clip-1 {
-      top: -15px;
-      left: -130px;
-      transform: rotate(-8deg);
-    }
-    .news-clip-2 {
-      top: -15px;
-      right: -130px;
-      transform: rotate(8deg);
-    }
-    .news-clip-1.scattered, .news-clip-2.scattered {
+    .news-clip-1.scattered {
       opacity: 0.98;
+      transform: translate(60px, -92px) scale(1) rotate(2deg);
+    }
+    .news-clip-2.scattered {
+      opacity: 0.98;
+      transform: translate(-55px, 78px) scale(1) rotate(-2.5deg);
+    }
+    .news-clip-3.scattered {
+      opacity: 0.96;
+      transform: translate(-80px, -88px) scale(0.95) rotate(-3deg);
     }
 
-    /* Scattered Evidence Photo Polaroids */
+    /* Evidence Photo Polaroids Neatly Pinned With Scotch Tape */
     .flying-evidence-polaroid {
       position: absolute;
-      width: 105px;
-      background: #f8fafc;
-      padding: 5px 5px 12px;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.95);
-      border-radius: 3px;
-      z-index: 25;
+      width: 106px;
+      background: #fafafa;
+      padding: 5px 5px 10px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
+      border-radius: 2px;
+      z-index: 24;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+    }
+    .flying-evidence-polaroid::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 32%;
+      width: 36px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.55);
+      border-left: 1px dashed rgba(0, 0, 0, 0.2);
+      border-right: 1px dashed rgba(0, 0, 0, 0.2);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      transform: rotate(-2deg);
+      z-index: 5;
+    }
+    .polaroid-1.scattered {
+      opacity: 1;
+      transform: translate(-170px, -15px) scale(1) rotate(-4.5deg);
+    }
+    .polaroid-2.scattered {
+      opacity: 1;
+      transform: translate(168px, 18px) scale(1) rotate(4deg);
     }
     .flying-evidence-polaroid img {
       width: 100%;
       height: 75px;
       object-fit: cover;
       filter: contrast(120%) grayscale(10%);
+      display: block;
     }
     .flying-evidence-polaroid span {
       font-family: 'JetBrains Mono', monospace;
@@ -843,19 +931,6 @@
       margin-top: 4px;
       text-align: center;
       letter-spacing: 0.5px;
-    }
-    .polaroid-1 {
-      bottom: -25px;
-      left: -110px;
-      transform: rotate(-10deg);
-    }
-    .polaroid-2 {
-      bottom: -25px;
-      right: -110px;
-      transform: rotate(10deg);
-    }
-    .polaroid-1.scattered, .polaroid-2.scattered {
-      opacity: 0.98;
     }
 
     /* SCENE 5: Dedicated Bottom Deck for Typewriter & CTA (No Overlap, Guaranteed Centering) */
@@ -932,25 +1007,29 @@
       position: absolute;
       top: calc(7vh + 16px);
       right: 28px;
-      background: rgba(12, 16, 24, 0.85);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: var(--text-main);
+      background: rgba(8, 12, 18, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(240, 246, 252, 0.55);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      padding: 8px 18px;
+      font-size: 0.74rem;
+      padding: 7px 15px;
       border-radius: 6px;
       cursor: pointer;
       z-index: 100;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
+      opacity: 0.38;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
     .intro-skip-btn:hover {
-      background: #fff;
-      color: #000;
-      border-color: #fff;
+      opacity: 0.95;
+      background: rgba(12, 18, 28, 0.92);
+      color: #fff;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.4);
+      transform: translateY(-1px);
     }
 
     /* ==========================================================================
@@ -1453,7 +1532,7 @@
       z-index: 1000;
       border-bottom: 2px solid #000;
     }
-    .hazard-ribbon span {
+    .hazard-ribbon > span {
       background: #000;
       color: var(--accent-yellow);
       padding: 4px 16px;
@@ -1467,11 +1546,130 @@
       100% { background-position: 100% 0; }
     }
 
+    /* In-Page Section Hazard Dividers (Full Bleed Edge-to-Edge Matching Container Margin) */
+    .section-hazard-divider {
+      position: relative;
+      top: auto;
+      z-index: 10;
+      margin: 55px calc(-1 * var(--container-h-pad, 24px)) 30px;
+      width: calc(100% + (2 * var(--container-h-pad, 24px)));
+      border-radius: 0;
+      border-top: 2.5px solid #000;
+      border-bottom: 2.5px solid #000;
+      border-left: none;
+      border-right: none;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.95);
+      padding: 8px 0;
+      overflow: hidden;
+      clear: both;
+    }
+    .hazard-ribbon-inner {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+    .hazard-ribbon-title {
+      background: #000;
+      color: var(--accent-yellow);
+      padding: 5px 14px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--accent-yellow);
+      box-shadow: 0 0 14px rgba(255, 223, 0, 0.35);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      min-width: 0;
+    }
+    .hazard-back-top-btn {
+      background: #000;
+      color: #fff;
+      border: 1.5px solid var(--accent-yellow);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.8);
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .hazard-back-top-btn span {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      color: inherit !important;
+      display: inline !important;
+    }
+    .hazard-back-top-btn .greyhat-nav-icon {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 3px rgba(0, 242, 254, 0.6));
+      transition: transform 0.2s ease;
+    }
+    .hazard-back-top-btn:hover {
+      background: var(--accent-yellow);
+      color: #000;
+      box-shadow: 0 0 20px rgba(255, 223, 0, 0.75);
+      transform: translateY(-2px);
+    }
+    .hazard-back-top-btn:hover .greyhat-nav-icon {
+      transform: scale(1.1);
+    }
+    .hazard-back-top-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Bottom Hazard Tape Ribbon Footer (Full Width Edge-to-Edge Like Header) */
+    .hazard-ribbon-footer {
+      position: relative;
+      top: auto;
+      bottom: 0;
+      z-index: 100;
+      width: 100%;
+      border-top: 2.5px solid #000;
+      border-bottom: none;
+      padding: 10px 0;
+      margin-top: 50px;
+      box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.95);
+    }
+    @media (max-width: 900px) {
+      .hazard-ribbon-footer {
+        padding-bottom: 75px;
+      }
+    }
+
+    /* Floating Back-to-Top HUD Button (Hidden to avoid obscuring section ribbons & mobile dock) */
+    .floating-back-top-btn {
+      display: none !important;
+    }
+
     /* Container */
     .dossier-container {
       max-width: 1440px;
       margin: 0 auto;
-      padding: 30px 24px 80px;
+      padding: 30px var(--container-h-pad, 24px) 80px;
     }
 
     /* Top Dossier Bar */
@@ -1676,24 +1874,94 @@
       transform: translateY(-3px);
     }
 
-    /* 3D Holographic Lanyard Badge Widget */
+    /* 3D Holographic Lanyard Badge Widget with Infinite Levitation & Cyber Channeling */
     .lanyard-stage {
       display: flex;
       justify-content: center;
-      perspective: 1200px;
+      perspective: 1400px;
+      position: relative;
     }
     .holo-badge-card {
       width: 320px;
       height: 470px;
       background: #0b0f17;
-      border: 2px solid rgba(255, 255, 255, 0.18);
+      border: 2px solid transparent;
+      background-clip: padding-box, border-box;
+      background-origin: padding-box, border-box;
+      background-image: 
+        linear-gradient(to bottom, #0b0f17, #070a10),
+        linear-gradient(135deg, #00f2fe, #a855f7 35%, #ffdf00 70%, #00f2fe 100%);
+      background-size: 100% 100%, 300% 300%;
       border-radius: 20px;
       padding: 22px;
       position: relative;
-      cursor: pointer;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
       transform-style: preserve-3d;
-      transition: transform 0.15s ease-out, box-shadow 0.3s ease;
-      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 242, 254, 0.15);
+      box-shadow: 
+        0 30px 60px -15px rgba(0, 0, 0, 0.95), 
+        0 0 35px rgba(0, 242, 254, 0.35),
+        0 0 60px rgba(168, 85, 247, 0.2);
+      animation: holoLevitate 6s ease-in-out infinite, channelingBorder 5s linear infinite;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .holo-badge-card:active {
+      cursor: grabbing;
+    }
+    .holo-badge-card.interacting {
+      animation: channelingBorder 3s linear infinite;
+    }
+    @keyframes holoLevitate {
+      0%, 100% {
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+      25% {
+        transform: translateY(-8px) rotateX(1.8deg) rotateY(-2.5deg) rotateZ(0.8deg);
+      }
+      50% {
+        transform: translateY(-3px) rotateX(-1.2deg) rotateY(1.4deg) rotateZ(-0.6deg);
+      }
+      75% {
+        transform: translateY(-9px) rotateX(2.2deg) rotateY(2.8deg) rotateZ(-1deg);
+      }
+    }
+    @keyframes channelingBorder {
+      0% { background-position: 0 0, 0% 50%; }
+      50% { background-position: 0 0, 100% 50%; }
+      100% { background-position: 0 0, 0% 50%; }
+    }
+    .badge-channeling-beacon {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      background: rgba(0, 242, 254, 0.12);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      padding: 2px 8px;
+      border-radius: 999px;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+      z-index: 10;
+    }
+    .beacon-pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-cyan);
+      animation: beaconBlink 1.4s ease-in-out infinite;
+    }
+    @keyframes beaconBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
     }
     .holo-badge-card::before {
       content: '';
@@ -2155,14 +2423,30 @@
     }
 
     /* Flappy Dev Retro Arcade Box */
+    /* Flappy Dev Retro Arcade Box & Theater Mode */
     .arcade-noir-box {
-      margin-top: 60px;
+      margin-top: 30px;
       background: #080b12;
       border: 2px solid #238636;
       border-radius: 18px;
       padding: 36px;
       position: relative;
       overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .arcade-noir-box.theater-mode {
+      border-color: #00ff88;
+      box-shadow: 0 0 50px rgba(0, 255, 136, 0.25), inset 0 0 30px rgba(0, 255, 136, 0.08);
+      padding: 32px 24px;
+    }
+    .arcade-noir-box.theater-mode .gameboy-screen-wrapper {
+      max-width: 960px;
+      width: 100%;
+    }
+    .arcade-noir-box.theater-mode #flappyCanvas {
+      max-width: 920px;
+      aspect-ratio: 16 / 9;
+      height: auto !important;
     }
     .arcade-tape {
       position: absolute;
@@ -2175,23 +2459,322 @@
       font-weight: 800;
       padding: 4px 12px;
       transform: rotate(2deg);
+      border-radius: 3px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      z-index: 5;
+    }
+    .arcade-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .arcade-mode-toggle-btn {
+      background: rgba(0, 255, 136, 0.12);
+      border: 1.5px solid var(--accent-green);
+      color: var(--accent-green);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .arcade-mode-toggle-btn:hover {
+      background: var(--accent-green);
+      color: #000;
+      box-shadow: 0 0 16px rgba(0, 255, 136, 0.7);
+      transform: translateY(-2px);
+    }
+    .flappy-core-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 18px 0 10px;
+    }
+    .flappy-core-btn {
+      background: #0d121c;
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .flappy-core-btn:hover {
+      border-color: #fff;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .flappy-core-btn.active {
+      background: rgba(0, 255, 136, 0.18);
+      border-color: var(--accent-green);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(0, 255, 136, 0.4);
+    }
+    .flappy-core-btn.core-drone.active {
+      background: rgba(0, 242, 254, 0.18);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.4);
+    }
+    .flappy-core-btn.core-quantum.active {
+      background: rgba(168, 85, 247, 0.18);
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+    }
+    .flappy-core-btn.core-jet.active {
+      background: rgba(255, 51, 68, 0.18);
+      border-color: var(--accent-red);
+      box-shadow: 0 0 16px rgba(255, 51, 68, 0.4);
+    }
+    .flappy-core-skill-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      text-align: center;
+      margin: 4px 0 14px;
+      min-height: 22px;
+      letter-spacing: 0.5px;
     }
     .gameboy-screen-wrapper {
-      max-width: 480px;
-      margin: 24px auto 0;
+      max-width: 520px;
+      width: 100%;
+      margin: 12px auto 0;
       background: #000;
       border: 3px solid #161b22;
       border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
+      padding: 10px;
+      box-shadow: 0 0 35px rgba(0, 255, 136, 0.15);
+      transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
     }
     #flappyCanvas {
       width: 100%;
-      height: 270px;
+      max-width: 480px;
+      aspect-ratio: 16 / 9;
+      height: auto !important;
       background: #05080c;
       border-radius: 8px;
       display: block;
+      margin: 0 auto;
       border: 1px solid #00ff88;
+      box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.12), 0 0 20px rgba(0, 255, 136, 0.18);
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Animated Flappy Dev Hero Quick-Launch Badge */
+    .flappy-hero-launch-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(6, 9, 14, 0.95) 100%);
+      border: 1.5px solid rgba(0, 255, 136, 0.4);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-top: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 255, 136, 0.12), inset 0 0 15px rgba(0, 255, 136, 0.04);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      width: fit-content;
+      animation: flappyBadgePulse 3s ease-in-out infinite alternate;
+      text-decoration: none;
+    }
+    .flappy-hero-launch-badge:hover {
+      border-color: #00ff88;
+      background: rgba(0, 255, 136, 0.16);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.4), inset 0 0 20px rgba(0, 255, 136, 0.1);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .flappy-badge-rocket {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid rgba(0, 255, 136, 0.5);
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .flappy-rocket-svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: #00ff88;
+      stroke-width: 2;
+      animation: flappyRocketFloat 2s ease-in-out infinite alternate;
+    }
+    .rocket-fire {
+      position: absolute;
+      bottom: 2px;
+      left: 5px;
+      width: 6px;
+      height: 6px;
+      background: #ff3344;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffdf00, 0 0 12px #ff3344;
+      animation: rocketFirePulse 0.4s ease-in-out infinite alternate;
+    }
+    @keyframes flappyRocketFloat {
+      0% { transform: translateY(2px) rotate(-3deg); }
+      100% { transform: translateY(-3px) rotate(3deg); }
+    }
+    @keyframes rocketFirePulse {
+      0% { transform: scale(0.7); opacity: 0.6; }
+      100% { transform: scale(1.4); opacity: 1; }
+    }
+    @keyframes flappyBadgePulse {
+      0% { box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1); }
+      100% { box-shadow: 0 4px 28px rgba(0, 255, 136, 0.28); }
+    }
+    .flappy-badge-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .flappy-badge-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.64rem;
+      color: #86efac;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .flappy-badge-arrow {
+      font-size: 0.8rem;
+      color: #00ff88;
+      margin-left: 4px;
+      transition: transform 0.2s ease;
+    }
+    .flappy-hero-launch-badge:hover .flappy-badge-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Tactical Classified Work-In-Progress Notice (Hero & Vault) */
+    .classified-wip-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: linear-gradient(135deg, rgba(255, 223, 0, 0.07) 0%, rgba(18, 24, 38, 0.94) 100%);
+      border: 1.5px dashed rgba(255, 223, 0, 0.45);
+      border-radius: 12px;
+      padding: 13px 18px;
+      margin: 18px 0 14px;
+      position: relative;
+      box-shadow: 0 4px 25px rgba(255, 223, 0, 0.08), inset 0 0 20px rgba(255, 223, 0, 0.03);
+      backdrop-filter: blur(10px);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .classified-wip-notice:hover {
+      border-color: var(--accent-yellow);
+      box-shadow: 0 6px 30px rgba(255, 223, 0, 0.16), inset 0 0 25px rgba(255, 223, 0, 0.06);
+    }
+    .wip-indicator-beacon {
+      position: relative;
+      width: 12px;
+      height: 12px;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    .wip-indicator-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-yellow);
+      box-shadow: 0 0 12px var(--accent-yellow);
+    }
+    .wip-indicator-pulse {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-yellow);
+      animation: wipBeaconPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+    @keyframes wipBeaconPulse {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .wip-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .wip-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+    .wip-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #000;
+      background: var(--accent-yellow);
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .wip-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--accent-yellow);
+    }
+    .wip-text {
+      font-size: 0.83rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+    }
+    .wip-text strong {
+      color: #fff;
+    }
+    .wip-sub-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: #94a3b8;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .wip-sub-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .wip-sub-item span.dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
     }
 
     /* Complete Photographic Evidence Vault Grid */
@@ -2616,9 +3199,362 @@
       }
     }
 
+    /* Mobile Tactical Quick-Dock HUD (< 900px) */
+    .mobile-tactical-dock {
+      display: none;
+    }
+    @media (max-width: 900px) {
+      .mobile-tactical-dock {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9990;
+        background: rgba(6, 9, 14, 0.96);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-top: 1.5px solid rgba(0, 242, 254, 0.35);
+        box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 242, 254, 0.1);
+        justify-content: space-around;
+        align-items: center;
+        padding: 5px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+      }
+      .dock-item-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 5px 6px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        min-height: 48px;
+        min-width: 48px;
+        justify-content: center;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+      }
+      .dock-item-btn svg {
+        width: 17px;
+        height: 17px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        transition: transform 0.25s ease, filter 0.25s ease;
+      }
+      .dock-item-btn:active {
+        transform: scale(0.92);
+      }
+      /* Individual Themed Glow Highlights for ALL Nav Buttons */
+      .dock-item-btn.dock-tools {
+        color: #67e8f9;
+        border-color: rgba(0, 242, 254, 0.25);
+      }
+      .dock-item-btn.dock-tools.active, .dock-item-btn.dock-tools:hover {
+        background: rgba(0, 242, 254, 0.18);
+        border-color: var(--accent-cyan);
+        color: #ffffff;
+        box-shadow: 0 0 16px rgba(0, 242, 254, 0.4);
+      }
+      .dock-item-btn.dock-systems {
+        color: #fde047;
+        border-color: rgba(255, 223, 0, 0.25);
+      }
+      .dock-item-btn.dock-systems.active, .dock-item-btn.dock-systems:hover {
+        background: rgba(255, 223, 0, 0.18);
+        border-color: var(--accent-yellow);
+        color: #ffffff;
+        box-shadow: 0 0 16px rgba(255, 223, 0, 0.4);
+      }
+      .dock-item-btn.dock-arcade {
+        color: #86efac;
+        border-color: rgba(0, 255, 136, 0.25);
+      }
+      .dock-item-btn.dock-arcade.active, .dock-item-btn.dock-arcade:hover {
+        background: rgba(0, 255, 136, 0.18);
+        border-color: var(--accent-green);
+        color: #ffffff;
+        box-shadow: 0 0 16px rgba(0, 255, 136, 0.4);
+      }
+      .dock-item-btn.dock-radar {
+        color: #c084fc;
+        border-color: rgba(168, 85, 247, 0.25);
+      }
+      .dock-item-btn.dock-radar.active, .dock-item-btn.dock-radar:hover {
+        background: rgba(168, 85, 247, 0.18);
+        border-color: var(--accent-purple);
+        color: #ffffff;
+        box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+      }
+      .dock-item-btn.dock-vault {
+        color: #fdba74;
+        border-color: rgba(249, 115, 22, 0.25);
+      }
+      .dock-item-btn.dock-vault.active, .dock-item-btn.dock-vault:hover {
+        background: rgba(249, 115, 22, 0.18);
+        border-color: #f97316;
+        color: #ffffff;
+        box-shadow: 0 0 16px rgba(249, 115, 22, 0.4);
+      }
+      .dock-item-btn.dock-top {
+        color: #38bdf8;
+        border-color: rgba(56, 189, 248, 0.3);
+      }
+      .dock-item-btn.dock-top:hover, .dock-item-btn.dock-top:active {
+        background: rgba(56, 189, 248, 0.2);
+        border-color: #38bdf8;
+        color: #ffffff;
+        box-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
+      }
+      .dock-item-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 14px;
+        height: 2.5px;
+        border-radius: 2px;
+        background: currentColor;
+        box-shadow: 0 0 8px currentColor;
+      }
+      .dossier-container {
+        padding-bottom: 110px !important;
+      }
+      .floating-back-top-btn {
+        display: none !important; /* Hide redundant floating box on mobile to prevent obstruction */
+      }
+    }
+
+    /* Tablet Responsive Styles (769px to 1024px) */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      :root {
+        --container-h-pad: 20px;
+      }
+      .dossier-container {
+        padding: 24px var(--container-h-pad, 20px) 90px;
+      }
+      .noir-hero {
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 24px;
+        padding: 28px 22px;
+      }
+      .hero-title {
+        font-size: clamp(2.4rem, 4.5vw, 3.2rem);
+      }
+      .systems-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .radar-deck-layout {
+        grid-template-columns: 1fr;
+      }
+      #tacticalRadarCanvas {
+        max-width: 380px;
+      }
+      .arcade-noir-box {
+        padding: 28px 22px;
+      }
+      .flappy-core-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .flappy-core-btn {
+        flex: 1 1 calc(50% - 8px);
+      }
+      .vault-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+      }
+      .intro-attache-stage {
+        transform: translate(-50%, -50%) scale(0.9);
+        transform-origin: center center;
+      }
+    }
+
+    /* Mobile Responsive Styles (< 768px) */
     @media (max-width: 768px) {
+      :root {
+        --container-h-pad: 14px;
+      }
+      .dossier-container {
+        padding: 20px var(--container-h-pad, 14px) 100px;
+      }
+      .noir-btn-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        width: 100%;
+      }
+      .btn-noir-primary, .btn-noir-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 14px;
+        font-size: 0.82rem;
+        min-height: 44px;
+      }
+      .intro-attache-stage {
+        transform: translate(-50%, -50%) scale(clamp(0.52, calc(86vw / 520px), 0.95));
+        transform-origin: center center;
+      }
+      .intro-bottom-action-deck {
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+        padding: 0 16px;
+        width: 100%;
+      }
+      .intro-telemetry {
+        font-size: 0.65rem !important;
+        max-width: 92vw;
+        line-height: 1.4;
+      }
+      .intro-enter-btn {
+        padding: 11px 18px !important;
+        font-size: 0.8rem !important;
+        max-width: 90vw;
+      }
+      .biometric-scanner-card {
+        width: min(400px, 92vw);
+        height: auto;
+        padding: 24px 18px;
+        border-radius: 18px;
+      }
+      .biometric-pad-wrapper {
+        margin: 12px 0;
+      }
+
+      /* Seamless Mobile Cordon Hazard Ribbon */
+      .section-hazard-divider {
+        margin: 40px calc(-1 * var(--container-h-pad, 14px)) 24px;
+        width: calc(100% + (2 * var(--container-h-pad, 14px)));
+        padding: 6px 0;
+      }
+      .hazard-ribbon-inner {
+        padding: 0 10px;
+        gap: 8px;
+      }
+      .hazard-ribbon-title {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+        padding: 4px 8px;
+      }
+      .hazard-back-top-btn {
+        padding: 4px 8px;
+        font-size: 0.62rem;
+        gap: 4px;
+      }
+      .hazard-back-top-btn .greyhat-nav-icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* Mobile Nav Crate Transition Overlay */
+      .crate-door-left, .crate-door-right {
+        padding: 18px 12px;
+        border-width: 6px;
+      }
+      .iron-corner-strap {
+        width: 46px;
+        height: 46px;
+      }
+      .iron-bolt {
+        width: 10px;
+        height: 10px;
+        border-width: 2px;
+      }
+      .wood-cross-batten {
+        height: 22px;
+      }
+      .batten-top-bar, .batten-bottom-bar {
+        top: 12px; bottom: 12px; left: 10px; right: 10px; height: 20px;
+      }
+      .batten-diagonal-1, .batten-diagonal-2 {
+        height: 24px;
+      }
+      .crate-pasted-manifest {
+        padding: 8px 10px;
+        margin-top: 14px !important;
+        max-width: 100%;
+        border-radius: 4px;
+      }
+      .manifest-logo {
+        font-size: 0.74rem;
+        letter-spacing: 1px;
+      }
+      .manifest-barcode {
+        width: 50px;
+        height: 14px;
+      }
+      .manifest-grid {
+        font-size: 0.52rem;
+        gap: 2px;
+        padding-bottom: 4px;
+        margin-bottom: 4px;
+      }
+      .manifest-stamp-slant {
+        font-size: 0.62rem;
+        padding: 2px 6px;
+        right: 6px;
+        bottom: 6px;
+      }
+      .crate-wood-stencil {
+        margin-bottom: 12px !important;
+      }
+      .stencil-text-main {
+        font-size: 1.15rem;
+        letter-spacing: 1.5px;
+      }
+      .stencil-text-sub {
+        font-size: 0.56rem;
+        letter-spacing: 1px;
+      }
+      .crate-large-serial {
+        font-size: 1.6rem;
+        letter-spacing: 2px;
+      }
+      .crate-wood-lock {
+        width: 150px;
+        height: 150px;
+        padding: 10px;
+        border-width: 4px;
+        box-shadow: 0 0 40px rgba(217, 119, 6, 0.6), 0 15px 35px rgba(0,0,0,0.98);
+      }
+      .crate-wood-lock svg {
+        width: 28px !important;
+        height: 28px !important;
+        margin-bottom: 2px !important;
+      }
+      #crateLockMsg {
+        font-size: 0.65rem !important;
+        letter-spacing: 0.5px !important;
+      }
+      #crateLockSub {
+        font-size: 0.52rem !important;
+      }
+
+      .lanyard-stage {
+        margin-top: 15px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      .holo-badge-card {
+        width: min(290px, 86vw);
+        height: 410px;
+      }
+      .badge-photo-frame {
+        height: 190px;
+      }
       .hazard-ribbon {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         letter-spacing: 1.5px;
         padding: 7px 0;
       }
@@ -2627,18 +3563,69 @@
         letter-spacing: -1px;
       }
       .hero-tagline {
-        font-size: 0.95rem;
+        font-size: 0.92rem;
       }
       .systems-grid {
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: 16px;
       }
       .system-dossier-card {
-        padding: 20px 18px;
+        padding: 18px 16px;
+      }
+      .arcade-noir-box {
+        padding: 20px 14px;
+        border-radius: 14px;
+      }
+      .arcade-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .flappy-core-selector {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+      }
+      .flappy-core-btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.65rem;
+        padding: 8px 6px;
+      }
+      .flappy-core-skill-desc {
+        font-size: 0.62rem;
+        min-height: 28px;
+      }
+      .gameboy-screen-wrapper {
+        padding: 6px;
+        border-width: 2px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 100%;
+      }
+      .calc-box {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 12px;
+      }
+      .calc-input-group input {
+        font-size: 16px !important; /* Prevents iOS browser auto-zoom */
+      }
+      .radar-scope-viewport {
+        padding: 14px 10px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      #tacticalRadarCanvas {
+        max-width: 280px;
+      }
+      .radar-telemetry-sidebar {
+        padding: 16px;
       }
       .vault-grid {
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
-        gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+        gap: 12px;
       }
       .vault-filters {
         gap: 8px;
@@ -2654,11 +3641,11 @@
       .section-header {
         flex-direction: column;
         align-items: flex-start;
-        margin: 40px 0 20px;
-        gap: 10px;
+        margin: 36px 0 18px;
+        gap: 8px;
       }
       .section-title {
-        font-size: clamp(1.4rem, 6vw, 2rem);
+        font-size: clamp(1.35rem, 5.5vw, 1.9rem);
       }
       .dossier-topbar {
         flex-direction: column;
@@ -2682,37 +3669,72 @@
       #modalDesc {
         font-size: 0.85rem !important;
       }
-      .calc-box {
-        grid-template-columns: 1fr;
-        padding: 16px;
-      }
-      .radar-hud-bottom {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-      }
-      .attache-case {
-        transform: scale(min(1, calc(100vw / 840px)));
-        transform-origin: center center;
-      }
     }
 
+    /* Small Phones Responsive Styles (< 480px) */
     @media (max-width: 480px) {
+      :root {
+        --container-h-pad: 10px;
+      }
       .dossier-container {
-        padding: 16px 12px 60px;
+        padding: 14px var(--container-h-pad, 10px) 95px;
       }
       .hero-cta-group {
         flex-direction: column;
         width: 100%;
-        gap: 10px;
+        gap: 8px;
       }
       .hero-cta-group button {
         width: 100%;
         justify-content: center;
       }
       .tool-capsule-card {
-        min-width: 150px;
-        padding: 10px 14px;
+        min-width: 135px;
+        padding: 8px 10px;
+      }
+      .biometric-scanner-card {
+        padding: 18px 12px;
+        width: min(340px, 94vw);
+      }
+      .biometric-scanner-pad {
+        width: 105px;
+        height: 105px;
+      }
+      .biometric-pad-wrapper {
+        width: 135px;
+        height: 135px;
+        margin: 8px 0;
+      }
+      .biometric-progress-ring {
+        width: 135px;
+        height: 135px;
+      }
+      .intro-attache-stage {
+        transform: translate(-50%, -50%) scale(clamp(0.46, calc(82vw / 520px), 0.72));
+        transform-origin: center center;
+      }
+      .section-hazard-divider {
+        margin: 32px calc(-1 * var(--container-h-pad, 10px)) 20px;
+        width: calc(100% + (2 * var(--container-h-pad, 10px)));
+        padding: 5px 0;
+      }
+      .hazard-ribbon-title {
+        font-size: 0.54rem;
+        letter-spacing: 0.5px;
+        padding: 3px 6px;
+      }
+      .hazard-back-top-btn {
+        font-size: 0.56rem;
+        padding: 3px 6px;
+      }
+      .mobile-tactical-dock .dock-item-btn {
+        padding: 4px 2px;
+        min-width: 40px;
+        font-size: 0.56rem;
+      }
+      .mobile-tactical-dock .dock-item-btn svg {
+        width: 15px;
+        height: 15px;
       }
     }
 
@@ -2803,7 +3825,6 @@
           <div class="biometric-scanner-pad" id="biometricScannerPad"
                onmousedown="startBiometricHold(event)"
                onmouseup="cancelBiometricHold()"
-               onmouseleave="cancelBiometricHold()"
                ontouchstart="startBiometricHold(event)"
                ontouchend="cancelBiometricHold()"
                ontouchcancel="cancelBiometricHold()">
@@ -2875,6 +3896,7 @@
 
             <!-- Springing Hinged Top Lid -->
             <div class="attache-hinged-lid" id="attacheHingedLid"></div>
+            <div class="attache-interior-glow" id="attacheInteriorGlow"></div>
 
             <!-- Dual Chrome Pop Latches -->
             <div class="attache-dual-locks">
@@ -2897,6 +3919,14 @@
               <div class="clipping-headline">QCU RESEARCH DISPATCH</div>
               <div class="clipping-body">
                 <strong>MAYO CHAIRPERSON</strong> receives commendation for sustainable civic frameworks and digital initiatives.
+              </div>
+            </div>
+
+            <!-- Authentic Newspaper Trimming: Regional Forum Report -->
+            <div class="folder-news-clipping news-clip-3" id="newsClip3">
+              <div class="clipping-headline">LEADERSHIP DIGEST</div>
+              <div class="clipping-body">
+                <strong>MANILA SPECIAL DISPATCH</strong> — Youth leadership commended across regional governance and tech conventions.
               </div>
             </div>
 
@@ -3073,6 +4103,10 @@
           <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
           Tactical Radar Deck
         </button>
+        <button onclick="navigateWithCrateTransition('#arcadeBox', 'CONNECTING RETRO 8086 ARCADE', 'FLAPPY DEV READY')" style="background: rgba(0, 255, 136, 0.12); border: 1px solid var(--accent-green); color: var(--accent-green); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 4px 12px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-weight: 700;">
+          <svg class="icon-svg" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="14" y2="14"/><line x1="12" y1="12" x2="16" y2="12"/><circle cx="17" cy="10" r="1"/><circle cx="19" cy="13" r="1"/></svg>
+          Retro Arcade
+        </button>
         <button onclick="replayIntro()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 4px 10px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
           <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Replay Intro
         </button>
@@ -3101,6 +4135,28 @@
           <span class="hero-tag-item">Hardware/Assembly Simulation</span>
         </div>
 
+        <!-- Classified Intelligence Notice: Active Work In Progress -->
+        <div class="classified-wip-notice">
+          <div class="wip-indicator-beacon">
+            <div class="wip-indicator-dot"></div>
+            <div class="wip-indicator-pulse"></div>
+          </div>
+          <div class="wip-body">
+            <div class="wip-header">
+              <span class="wip-tag">OPERATIONAL STATUS</span>
+              <span class="wip-title">/// CLASSIFIED ARCHIVE: WORK IN PROGRESS</span>
+            </div>
+            <div class="wip-text">
+              <strong>Notice:</strong> This portfolio dossier is actively under continuous development. All upcoming <strong>milestones, leadership achievements, academic advancements, research papers, and technical certifications</strong> are continuously verified and appended to this intelligence archive.
+            </div>
+            <div class="wip-sub-meta">
+              <div class="wip-sub-item"><span class="dot"></span><span>MILESTONES: STAGED</span></div>
+              <div class="wip-sub-item"><span class="dot"></span><span>ACADEMIC ADVANCEMENTS: INGESTING</span></div>
+              <div class="wip-sub-item"><span class="dot"></span><span>DEPLOYMENT: CONTINUOUS</span></div>
+            </div>
+          </div>
+        </div>
+
         <div class="noir-btn-group">
           <button onclick="navigateWithCrateTransition('#projects', 'OPENING 7 CORE SYSTEMS CRATE')" class="btn-noir-primary">
             <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
@@ -3114,8 +4170,9 @@
             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             AI & Dev Tools
           </button>
-            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-            AI & Dev Tools
+          <button onclick="navigateWithCrateTransition('#arcadeBox', 'CONNECTING RETRO 8086 ARCADE', 'FLAPPY DEV READY')" class="btn-noir-secondary" style="border-color: var(--accent-green); color: var(--accent-green);">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="14" y2="14"/><line x1="12" y1="12" x2="16" y2="12"/><circle cx="17" cy="10" r="1"/><circle cx="19" cy="13" r="1"/></svg>
+            Retro Arcade (Flappy Dev)
           </button>
           <button onclick="navigateWithCrateTransition('#vault', 'OPENING 47-ASSET EVIDENCE CRATE')" class="btn-noir-secondary">
             <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -3126,14 +4183,31 @@
             @noir_et_blancc66
           </a>
         </div>
+
+        <!-- Animated Flappy Dev Arcade Launch Badge (Directs to Game Panel) -->
+        <div class="flappy-hero-launch-badge" onclick="navigateWithCrateTransition('#arcadeBox', 'CONNECTING RETRO 8086 ARCADE', 'FLAPPY DEV READY')" title="Direct jump to Flappy Dev Arcade Cabinet">
+          <div class="flappy-badge-rocket">
+            <svg viewBox="0 0 24 24" class="flappy-rocket-svg"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+            <span class="rocket-fire"></span>
+          </div>
+          <div class="flappy-badge-info">
+            <div class="flappy-badge-title">🕹️ FLAPPY DEV // EXPANDABLE ARCADE</div>
+            <div class="flappy-badge-sub">INTERACTIVE 8-BIT RUNNER • 4 CUSTOM CORES • 10 THEMES</div>
+          </div>
+          <span class="flappy-badge-arrow">▶</span>
+        </div>
       </div>
 
       <!-- 3D Holographic Lanyard Badge -->
-      <div class="lanyard-stage">
-        <div class="holo-badge-card" id="holoBadge">
+      <div class="lanyard-stage" id="lanyardStage">
+        <div class="holo-badge-card" id="holoBadge" draggable="false">
+          <div class="badge-channeling-beacon">
+            <span class="beacon-pulse-dot"></span>
+            <span>CHANNELING // 041306</span>
+          </div>
           <div class="lanyard-top-slot"></div>
           <div class="badge-photo-frame">
-            <img src="./portfolio_assets/asset_14.jpg" alt="Luigi Emanuel Britania">
+            <img src="./portfolio_assets/asset_14.jpg" alt="Luigi Emanuel Britania" draggable="false">
           </div>
           <div class="badge-name">LUIGI EMANUEL BRITANIA</div>
           <div class="badge-role">PHILIPPINE DELEGATE // ASEAN '26</div>
@@ -3144,6 +4218,17 @@
         </div>
       </div>
     </section>
+
+    <!-- Hazard Ribbon Divider: AI & Dev Tools -->
+    <div class="hazard-ribbon section-hazard-divider">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
+      </div>
+    </div>
 
     <!-- ==========================================================================
          ENDLESS HOVER LOOP: AI MODELS, TOOLS & DEVELOPER LANGUAGES
@@ -3552,6 +4637,17 @@
       </div>
     </div>
 
+    <!-- Hazard Ribbon Divider: Proofs / 3-Tier Reels -->
+    <div class="hazard-ribbon section-hazard-divider">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ==========================================================================
          ARCHIVE REEL 01: PRODUCTION & CAPSTONE SYSTEMS (CONTINUOUS GLIDE - NO PAUSE)
          ========================================================================== -->
@@ -3609,10 +4705,21 @@
       </div>
     </div>
 
+    <!-- Hazard Ribbon Divider: 7 Core Systems -->
+    <div class="hazard-ribbon section-hazard-divider">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ==========================================================================
          THE 7 VERIFIED CORE SYSTEMS (DEEP DIVE DOSSIER)
          ========================================================================== -->
-    <div class="section-header" style="margin-top: 80px;">
+    <div class="section-header" style="margin-top: 40px;">
       <div>
         <div class="section-subtitle">/// DECLASSIFIED DOSSIER // 7 PRIMARY ARCHITECTURES ///</div>
         <h2 class="section-title">Core Systems Portfolio</h2>
@@ -3805,10 +4912,21 @@
 
     </div>
 
+    <!-- Hazard Ribbon Divider: Special Citations & Honors -->
+    <div class="hazard-ribbon section-hazard-divider">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ==========================================================================
          HONORABLE MENTIONS & RESEARCH CONSULTANCIES
          ========================================================================== -->
-    <div class="section-header" style="margin-top: 80px;">
+    <div class="section-header" style="margin-top: 40px;">
       <div>
         <div class="section-subtitle">/// SPECIAL CITATIONS // CONSULTANCIES & HONORABLE MENTIONS ///</div>
         <h2 class="section-title">Research Consultancies & Special Works</h2>
@@ -3890,29 +5008,82 @@
       </div>
     </div>
 
+    <!-- Hazard Ribbon Divider: Retro Arcade / Flappy Dev -->
+    <div class="hazard-ribbon section-hazard-divider" id="arcadeBox">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ==========================================================================
          RETRO 8-BIT ARCADE CONSOLE (8086 BIT-JUMPER / FLAPPY DEV)
          ========================================================================== -->
-    <div class="arcade-noir-box">
-      <span class="arcade-tape">RETRO CONSOLE // 8086 BIT-JUMPER</span>
-      <div style="text-align: center;">
-        <h3 style="font-family: 'Syne', sans-serif; font-size: 1.6rem; text-transform: uppercase;">
-          Flappy Dev // Server Pipe Hopper
-        </h3>
-        <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">
-          CLICK CANVAS OR PRESS [SPACEBAR] TO JUMP THROUGH SERVER RACKS
-        </p>
+    <div class="arcade-noir-box" id="arcadeNoirBox">
+      <span class="arcade-tape">ARCADE CABINET // EXPANDABLE</span>
+      
+      <div class="arcade-header-bar">
+        <div>
+          <h3 style="font-family: 'Syne', sans-serif; font-size: 1.55rem; text-transform: uppercase; color: #fff;">
+            Flappy Dev // Server Pipe Hopper
+          </h3>
+          <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
+            CLICK CANVAS OR PRESS [SPACEBAR] TO HOP THROUGH CLASSIFIED RACKS // THEMES CYCLE EVERY 10 PTS
+          </p>
+        </div>
+
+        <button class="arcade-mode-toggle-btn" id="flappyTheaterBtn" onclick="toggleFlappyTheaterMode()">
+          <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          <span id="flappyTheaterText">[ ⛶ THEATER MODE ]</span>
+        </button>
+      </div>
+
+      <!-- 4 Custom Flappy Dev Core Avatars & Power-Ups -->
+      <div class="flappy-core-selector">
+        <button class="flappy-core-btn active core-chip" id="coreBtnChip" onclick="selectFlappyCore('chip')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+          CORE 1: 8086 CHIP
+        </button>
+        <button class="flappy-core-btn core-drone" id="coreBtnDrone" onclick="selectFlappyCore('drone')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4v1H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h3v1a4 4 0 0 0 8 0v-1h3a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-3V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="11" r="2"/></svg>
+          CORE 2: CYBER DRONE
+        </button>
+        <button class="flappy-core-btn core-quantum" id="coreBtnQuantum" onclick="selectFlappyCore('quantum')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          CORE 3: QUANTUM TESSERACT
+        </button>
+        <button class="flappy-core-btn core-jet" id="coreBtnJet" onclick="selectFlappyCore('jet')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+          CORE 4: CRIMSON JET
+        </button>
+      </div>
+      <div class="flappy-core-skill-desc" id="flappyCoreSkillDesc">
+        [ ⚡ ACTIVE CORE: 8086 MICROPROCESSOR // MECH: OVERCLOCK TURBO — BALANCED FLIGHT &amp; BINARY DATA TRAIL ]
       </div>
 
       <div class="gameboy-screen-wrapper">
-        <canvas id="flappyCanvas" width="460" height="270"></canvas>
+        <canvas id="flappyCanvas" width="480" height="270"></canvas>
+      </div>
+    </div>
+
+    <!-- Hazard Ribbon Divider: Tactical Radar Deck -->
+    <div class="hazard-ribbon section-hazard-divider">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
       </div>
     </div>
 
     <!-- ==========================================================================
          TACTICAL SURVEILLANCE RADAR & SIGNAL INTERCEPT DECK (NOIR ANIMATED HUD)
          ========================================================================== -->
-    <div class="section-header" id="radarDeck" style="margin-top: 80px;">
+    <div class="section-header" id="radarDeck" style="margin-top: 40px;">
       <div>
         <div class="section-subtitle">/// PROCEDURAL KINETIC TELEMETRY // 360° SIGNAL INTERCEPT ///</div>
         <h2 class="section-title">Tactical Radar & Telemetry Deck</h2>
@@ -4029,16 +5200,44 @@
       </div>
     </div>
 
+    <!-- Hazard Ribbon Divider: Complete Evidence Vault -->
+    <div class="hazard-ribbon section-hazard-divider">
+      <div class="hazard-ribbon-inner">
+        <span class="hazard-ribbon-title">/// KEEP AWAY // RESTRICTED ZONE // DECLASSIFIED ARCHIVE // DO NOT CROSS // KEEP AWAY // DECLASSIFIED ///</span>
+        <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+          <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+          <span>TOP</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ==========================================================================
          COMPLETE PHOTOGRAPHIC EVIDENCE VAULT (ALL 47 REAL ASSETS SYNCED)
          ========================================================================== -->
-    <div class="section-header" id="vault" style="margin-top: 80px;">
+    <div class="section-header" id="vault" style="margin-top: 40px;">
       <div>
         <div class="section-subtitle">/// COMPLETE EVIDENCE ARCHIVE // ALL PHOTO ASSETS ///</div>
         <h2 class="section-title">Photographic & Manuscript Vault</h2>
       </div>
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--accent-yellow);">
         [CLICK ANY EVIDENCE TILE TO EXPAND DEBRIEF]
+      </div>
+    </div>
+
+    <!-- Vault Classified Ingestion & Expansion Notice -->
+    <div class="classified-wip-notice" style="margin: 14px 0 20px;">
+      <div class="wip-indicator-beacon">
+        <div class="wip-indicator-dot"></div>
+        <div class="wip-indicator-pulse"></div>
+      </div>
+      <div class="wip-body">
+        <div class="wip-header">
+          <span class="wip-tag">ARCHIVAL DISPATCH</span>
+          <span class="wip-title">/// EVIDENCE INGESTION PROTOCOL ACTIVE</span>
+        </div>
+        <div class="wip-text">
+          Displaying verified initial declassified asset manifests. Further <strong>collegiate milestones, ASEAN diplomatic proceedings, organizational honors, research publications, and hardware builds</strong> are actively being compiled, curated, and staged for upcoming archive releases.
+        </div>
       </div>
     </div>
 
@@ -4086,7 +5285,53 @@
 
   </div>
 
-    
+  <!-- Bottom Hazard Tape Ribbon Footer (Full Width Edge-to-Edge Like Header) -->
+  <footer class="hazard-ribbon hazard-ribbon-footer">
+    <div class="hazard-ribbon-inner">
+      <span class="hazard-ribbon-title">
+        /// DECLASSIFIED // ALL EVIDENCE UNSEALED // LEVEL 5 RESTRICTED ARCHIVE // QCU-MAYO-041306 // KEEP AWAY ///
+      </span>
+      <button class="hazard-back-top-btn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+        <svg class="greyhat-nav-icon" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+        <span>TOP</span>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Floating Tactical Back-to-Top HUD Button -->
+  <button class="floating-back-top-btn" id="floatingBackTopBtn" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+    <svg class="greyhat-nav-icon" viewBox="0 0 64 64" style="width: 18px; height: 18px;"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.7"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+    <span>[ TOP ]</span>
+  </button>
+
+  <!-- Mobile Tactical Quick-Dock HUD (< 900px screens) -->
+  <nav class="mobile-tactical-dock" aria-label="Mobile Tactical Quick Navigation">
+    <a href="#tools" class="dock-item-btn dock-tools" id="dockNavTools" onclick="navigateWithCrateTransition('#tools', 'AI & DEV TOOLS')">
+      <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      <span>AI/Tools</span>
+    </a>
+    <a href="#projects" class="dock-item-btn dock-systems" id="dockNavSystems" onclick="navigateWithCrateTransition('#projects', 'CORE SYSTEMS')">
+      <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span>Systems</span>
+    </a>
+    <a href="#arcadeBox" class="dock-item-btn dock-arcade" id="dockNavArcade" onclick="navigateWithCrateTransition('#arcadeBox', 'RETRO ARCADE')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="14" y2="14"/><line x1="12" y1="12" x2="16" y2="12"/><circle cx="17" cy="10" r="1"/><circle cx="19" cy="13" r="1"/></svg>
+      <span>Arcade</span>
+    </a>
+    <a href="#radarDeck" class="dock-item-btn dock-radar" id="dockNavRadar" onclick="navigateWithCrateTransition('#radarDeck', 'RADAR SCOPE')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+      <span>Radar</span>
+    </a>
+    <a href="#vault" class="dock-item-btn dock-vault" id="dockNavVault" onclick="navigateWithCrateTransition('#vault', 'EVIDENCE VAULT')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span>Vault</span>
+    </a>
+    <button class="dock-item-btn dock-top" id="dockNavTop" onclick="scrollToDossierTop(event)" title="Return to Top Archive">
+      <svg class="greyhat-nav-icon" viewBox="0 0 64 64" style="width: 20px; height: 20px;"><rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="3" stroke-opacity="0.8"/><path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/><path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/><path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/><rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/><rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/><circle cx="24" cy="50" r="1.5" fill="#ffffff"/><circle cx="40" cy="50" r="1.5" fill="#ffffff"/><circle cx="32" cy="13" r="3" fill="#94a3b8"/></svg>
+      <span>TOP</span>
+    </button>
+  </nav>
+
   <!-- Evidence Lightbox -->
     <!-- Dossier Evidence Modal Overlay with Navigation -->
   <div class="dossier-modal" id="evidenceModal" onclick="closeEvidenceModal(event)">
@@ -4416,11 +5661,13 @@
 
       const wrapper = document.getElementById('biometricPadWrapper');
       const pad = document.getElementById('biometricScannerPad');
+      const card = document.querySelector('.biometric-scanner-card');
       const ringFill = document.getElementById('biometricRingFill');
       const statusText = document.getElementById('biometricStatusText');
 
       if (wrapper) wrapper.classList.add('holding');
       if (pad) pad.classList.add('holding');
+      if (card) card.classList.add('holding');
 
       // The moment the biometrics is pressed, start hyping up with the trailer soundtrack!
       playIntroTrailerMusic(true);
@@ -4468,17 +5715,77 @@
 
       const wrapper = document.getElementById('biometricPadWrapper');
       const pad = document.getElementById('biometricScannerPad');
+      const card = document.querySelector('.biometric-scanner-card');
       const ringFill = document.getElementById('biometricRingFill');
       const statusText = document.getElementById('biometricStatusText');
 
       if (wrapper) wrapper.classList.remove('holding');
       if (pad) pad.classList.remove('holding');
+      if (card) card.classList.remove('holding');
       if (ringFill) ringFill.style.strokeDashoffset = RING_CIRCUMFERENCE;
       if (statusText) {
         statusText.innerText = '[ HOLD SCANNER FOR 3 SECONDS TO UNSEAL ]';
         statusText.style.color = 'var(--accent-cyan)';
       }
     }
+
+    // Smooth Scroll to Top Dossier Archive
+    function scrollToDossierTop(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Mobile Tactical Dock Active Scroll-Spy
+    function updateDockActiveState() {
+      const sections = [
+        { id: 'tools', btnId: 'dockNavTools' },
+        { id: 'projects', btnId: 'dockNavSystems' },
+        { id: 'arcadeBox', btnId: 'dockNavArcade' },
+        { id: 'radarDeck', btnId: 'dockNavRadar' },
+        { id: 'vault', btnId: 'dockNavVault' }
+      ];
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      let activeFound = false;
+
+      // Check bottom of page
+      if ((window.innerHeight + scrollY) >= document.body.offsetHeight - 90) {
+        document.querySelectorAll('.mobile-tactical-dock .dock-item-btn').forEach(b => b.classList.remove('active'));
+        const vaultBtn = document.getElementById('dockNavVault');
+        if (vaultBtn) vaultBtn.classList.add('active');
+        return;
+      }
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i].id);
+        if (el) {
+          const top = el.getBoundingClientRect().top + scrollY - 220;
+          if (scrollY >= top) {
+            document.querySelectorAll('.mobile-tactical-dock .dock-item-btn').forEach(b => b.classList.remove('active'));
+            const curBtn = document.getElementById(sections[i].btnId);
+            if (curBtn) curBtn.classList.add('active');
+            activeFound = true;
+            break;
+          }
+        }
+      }
+      if (!activeFound) {
+        document.querySelectorAll('.mobile-tactical-dock .dock-item-btn').forEach(b => b.classList.remove('active'));
+      }
+    }
+
+    // Reveal floating back-to-top button on scroll and sync dock active state
+    window.addEventListener('scroll', () => {
+      const topBtn = document.getElementById('floatingBackTopBtn');
+      if (topBtn) {
+        if (window.scrollY > 450) {
+          topBtn.classList.add('visible');
+        } else {
+          topBtn.classList.remove('visible');
+        }
+      }
+      updateDockActiveState();
+    }, { passive: true });
+    window.addEventListener('DOMContentLoaded', updateDockActiveState);
 
     function completeBiometricAuth() {
       introSequenceStarted = true;
@@ -4517,6 +5824,7 @@
       const lockR = document.getElementById('attacheLockRight');
       const clip1 = document.getElementById('newsClip1');
       const clip2 = document.getElementById('newsClip2');
+      const clip3 = document.getElementById('newsClip3');
       const pol1 = document.getElementById('polaroid1');
       const pol2 = document.getElementById('polaroid2');
       const folder = document.getElementById('manilaCaseFolder');
@@ -4536,6 +5844,7 @@
       if (lockR) lockR.classList.remove('popped');
       if (clip1) clip1.classList.remove('scattered');
       if (clip2) clip2.classList.remove('scattered');
+      if (clip3) clip3.classList.remove('scattered');
       if (pol1) pol1.classList.remove('scattered');
       if (pol2) pol2.classList.remove('scattered');
       if (folder) folder.classList.remove('visible');
@@ -4548,9 +5857,9 @@
       if (enterBtn) enterBtn.classList.remove('visible');
 
       // Phase 1: Detective footsteps echo across the vault floor
-      setTimeout(() => playSingleFootstep(65, 0.25), 1400);
-      setTimeout(() => playSingleFootstep(70, 0.32), 2100);
-      setTimeout(() => playSingleFootstep(75, 0.40), 2800);
+      setTimeout(() => playSingleFootstep(65, 0.25), 600);
+      setTimeout(() => playSingleFootstep(70, 0.32), 1200);
+      setTimeout(() => playSingleFootstep(75, 0.40), 1800);
 
       // Phase 2: Sudden Drop Slam of Attaché Case
       setTimeout(() => {
@@ -4561,42 +5870,46 @@
           wrapper.classList.add('shaking');
           setTimeout(() => wrapper.classList.remove('shaking'), 500);
         }
-      }, 3400);
+      }, 2300);
 
-      // Phase 3: Dual Latch Pop & Top Lid Springs Open
+      // Phase 3: Dual Latch Pop & Hinged Lid Springs Open with Velvet Interior Glow
       setTimeout(() => {
         playLatchPopSound();
         if (lockL) lockL.classList.add('popped');
         if (lockR) lockR.classList.add('popped');
         if (lid) lid.classList.add('opened');
-      }, 4100);
+        const glow = document.getElementById('attacheInteriorGlow');
+        if (glow) glow.classList.add('active');
+      }, 3200);
 
-      // Phase 4: Scattered Newspaper Clippings & Polaroids Burst Out
-      setTimeout(() => {
-        if (clip1) clip1.classList.add('scattered');
-        if (clip2) clip2.classList.add('scattered');
-        if (pol1) pol1.classList.add('scattered');
-        if (pol2) pol2.classList.add('scattered');
-      }, 4500);
-
-      // Phase 5: Camera zooms dynamically in toward floor
+      // Phase 4: CRATE SHOWCASE (2 FULL SECONDS: 3200ms -> 5200ms)
+      // Camera smoothly zooms in to admire the metallic case & glowing interior
       setTimeout(() => {
         if (stage) stage.classList.add('zooming-to-floor');
-      }, 5200);
+      }, 4800);
 
-      // Phase 6: Confidential Folder rises to front view
+      // Phase 5: Confidential Folder physically rises out from inside the crate
       setTimeout(() => {
         if (folder) folder.classList.add('visible');
         const serial = document.getElementById('attacheSerialLabel');
         if (serial) serial.style.opacity = '0';
         if (stage) stage.classList.add('zooming-to-folder');
-      }, 6400);
+      }, 5400);
+
+      // Phase 6: Newspaper Trimmings & Polaroids slide smoothly into composed dossier positions
+      setTimeout(() => {
+        if (clip1) clip1.classList.add('scattered');
+        if (clip2) clip2.classList.add('scattered');
+        if (clip3) clip3.classList.add('scattered');
+        if (pol1) pol1.classList.add('scattered');
+        if (pol2) pol2.classList.add('scattered');
+      }, 6600);
 
       // Phase 7: Red Rubber DECLASSIFIED Stamp Impact
       setTimeout(() => {
         playStampSound();
         if (stamp) stamp.classList.add('slammed');
-      }, 7600);
+      }, 7800);
 
       // Phase 8: Typewriter Readout & Action Buttons
       setTimeout(() => {
@@ -4616,11 +5929,11 @@
             clearInterval(typeInterval);
           }
         }, 22);
-      }, 8200);
+      }, 8700);
 
       setTimeout(() => {
         if (enterBtn) enterBtn.classList.add('visible');
-      }, 9800);
+      }, 10400);
     }
 
     // =========================================================================
@@ -5363,19 +6676,77 @@
       if (c3) c3.innerText = timeStr;
     }, 50);
 
-    // 3D Parallax Tilt for Lanyard Card
+    // 3D Parallax Tilt & Infinite Floating Physics for Lanyard Card
     const badge = document.getElementById('holoBadge');
-    if (badge) {
-      document.addEventListener('mousemove', (e) => {
+    const lanyardStage = document.getElementById('lanyardStage') || (badge ? badge.parentElement : null);
+    if (badge && lanyardStage) {
+      let isHovered = false;
+      let targetRotX = 0;
+      let targetRotY = 0;
+      let curRotX = 0;
+      let curRotY = 0;
+      let tiltRaf = null;
+
+      badge.ondragstart = (e) => { e.preventDefault(); return false; };
+
+      function updateTilt() {
+        if (!isHovered) {
+          curRotX += (0 - curRotX) * 0.12;
+          curRotY += (0 - curRotY) * 0.12;
+          if (Math.abs(curRotX) < 0.05 && Math.abs(curRotY) < 0.05) {
+            curRotX = 0;
+            curRotY = 0;
+            badge.style.transform = '';
+            badge.classList.remove('interacting');
+            cancelAnimationFrame(tiltRaf);
+            tiltRaf = null;
+            return;
+          }
+        } else {
+          curRotX += (targetRotX - curRotX) * 0.15;
+          curRotY += (targetRotY - curRotY) * 0.15;
+        }
+
+        badge.style.transform = `perspective(1400px) rotateX(${curRotX}deg) rotateY(${curRotY}deg) scale3d(1.02, 1.02, 1.02)`;
+        tiltRaf = requestAnimationFrame(updateTilt);
+      }
+
+      function handleBadgeMove(e) {
         const rect = badge.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const deltaX = (e.clientX - centerX) / 14;
-        const deltaY = (e.clientY - centerY) / 14;
-        badge.style.transform = `rotateY(${deltaX}deg) rotateX(${-deltaY}deg)`;
+        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+        if (!clientX || !clientY) return;
+
+        const relX = (clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+        const relY = (clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+
+        targetRotY = Math.max(-13, Math.min(13, relX * 13));
+        targetRotX = Math.max(-13, Math.min(13, -relY * 13));
+
+        if (!isHovered) {
+          isHovered = true;
+          badge.classList.add('interacting');
+          if (!tiltRaf) tiltRaf = requestAnimationFrame(updateTilt);
+        }
+      }
+
+      lanyardStage.addEventListener('mousemove', handleBadgeMove);
+      lanyardStage.addEventListener('mouseenter', () => {
+        isHovered = true;
+        badge.classList.add('interacting');
+        if (!tiltRaf) tiltRaf = requestAnimationFrame(updateTilt);
       });
-      badge.addEventListener('mouseleave', () => {
-        badge.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      lanyardStage.addEventListener('mouseleave', () => {
+        isHovered = false;
+        targetRotX = 0;
+        targetRotY = 0;
+      });
+
+      lanyardStage.addEventListener('touchmove', handleBadgeMove, { passive: true });
+      lanyardStage.addEventListener('touchend', () => {
+        isHovered = false;
+        targetRotX = 0;
+        targetRotY = 0;
       });
     }
 
@@ -5793,13 +7164,12 @@
     renderMarqueeCarousels();
 
     // =========================================================================
-    // FLAPPY DEV 8086 RETRO GAME ENGINE (COUNTDOWN START + ROBO SFX + ZERO SCROLL)
+    // FLAPPY DEV RETRO ARCADE ENGINE (4 CORES + ANIMATED TRAILS + 10 THEMES + THEATER MODE)
     // =========================================================================
     const flappyCanvas = document.getElementById('flappyCanvas');
     const fCtx = flappyCanvas ? flappyCanvas.getContext('2d') : null;
     let birdY = 125;
     let birdVel = 0;
-    const flappyGravity = 0.22;
     let flappyPipes = [];
     let flappyScore = 0;
     let flappyHighScore = parseInt(localStorage.getItem('noir_flappy_best') || '0', 10);
@@ -5808,45 +7178,124 @@
     let countdownTimer = 0;
     let flappyParticles = [];
     let flappyFrame = 0;
+    let selectedCore = 'chip'; // 'chip' | 'drone' | 'quantum' | 'jet'
+    let isFlappyTheaterMode = false;
+    let currentThemeIndex = 0;
+    let lastThemeIndex = -1;
+    let sectorUpgradeBannerTimer = 0;
+    let sectorUpgradeBannerText = '';
 
-    // --- PROCEDURAL ROBOTIC SYNTHESIZER SFX ---
+    // 10 Dynamic Cyberpunk / Retro Sector Themes
+    const flappyThemes = [
+      { name: 'MATRIX CYBER GREEN', bg: '#020704', grid: 'rgba(0, 255, 136, 0.08)', pipeFill: '#061a0f', pipeStroke: '#00ff88', led1: '#00ff88', led2: '#ffdf00', hud: '#00ff88' },
+      { name: 'NEON CYBERPUNK CYAN', bg: '#030814', grid: 'rgba(0, 242, 254, 0.08)', pipeFill: '#071626', pipeStroke: '#00f2fe', led1: '#00f2fe', led2: '#ffffff', hud: '#00f2fe' },
+      { name: 'TOP SECRET HAZARD GOLD', bg: '#0c0a02', grid: 'rgba(255, 223, 0, 0.08)', pipeFill: '#241e06', pipeStroke: '#ffdf00', led1: '#ffdf00', led2: '#ff3344', hud: '#ffdf00' },
+      { name: 'BLOODLINE CRIMSON ALERT', bg: '#0f0406', grid: 'rgba(255, 51, 68, 0.08)', pipeFill: '#24080c', pipeStroke: '#ff3344', led1: '#ff3344', led2: '#ffdf00', hud: '#ff3344' },
+      { name: 'SYNTHWAVE VIOLET SUNSET', bg: '#0a0312', grid: 'rgba(168, 85, 247, 0.09)', pipeFill: '#1a0729', pipeStroke: '#a855f7', led1: '#ff00ff', led2: '#00f2fe', hud: '#c084fc' },
+      { name: 'DEEP SPACE AURORA', bg: '#020b0d', grid: 'rgba(52, 211, 153, 0.08)', pipeFill: '#061d1f', pipeStroke: '#2dd4bf', led1: '#38bdf8', led2: '#34d399', hud: '#2dd4bf' },
+      { name: 'SOLAR FLARE AMBER', bg: '#100702', grid: 'rgba(251, 146, 60, 0.08)', pipeFill: '#281105', pipeStroke: '#fb923c', led1: '#f97316', led2: '#fde047', hud: '#fb923c' },
+      { name: 'GLITCH MONOLITH WHITE', bg: '#06080b', grid: 'rgba(255, 255, 255, 0.08)', pipeFill: '#131822', pipeStroke: '#e2e8f0', led1: '#ffffff', led2: '#94a3b8', hud: '#f8fafc' },
+      { name: 'PHANTOM ULTRAVIOLET', bg: '#06020f', grid: 'rgba(129, 140, 248, 0.08)', pipeFill: '#140c2e', pipeStroke: '#818cf8', led1: '#6366f1', led2: '#c084fc', hud: '#a5b4fc' },
+      { name: 'TOXIC ACID RADIOACTIVE', bg: '#050a02', grid: 'rgba(163, 230, 53, 0.09)', pipeFill: '#142405', pipeStroke: '#a3e635', led1: '#84cc16', led2: '#bef264', hud: '#a3e635' }
+    ];
 
-    // 1. Robo Jump Ping (Crisp Dual-Oscillator Thruster Pulse)
+    // Core Mechanics Configuration with Generous Leeway
+    const coreConfigs = {
+      chip: {
+        gravity: 0.20,
+        jumpVel: -3.7,
+        forgiveness: 2,
+        scoreMult: 1,
+        desc: '[ ⚡ ACTIVE CORE: 8086 MICROPROCESSOR // MECH: OVERCLOCK TURBO — BALANCED AERODYNAMICS & BINARY DATA TRAIL ]'
+      },
+      drone: {
+        gravity: 0.16,
+        jumpVel: -3.2,
+        forgiveness: 4,
+        scoreMult: 1,
+        desc: '[ ⚡ ACTIVE CORE: CYBER RECON DRONE // MECH: ANTI-GRAV GLIDE — LOW GRAVITY HOVER & CYAN ION FLAME TRAIL ]'
+      },
+      quantum: {
+        gravity: 0.19,
+        jumpVel: -3.6,
+        forgiveness: 5, // Generous hitboxes
+        scoreMult: 1,
+        desc: '[ ⚡ ACTIVE CORE: QUANTUM TESSERACT // MECH: PHASE SHIFT — TEMPORAL FORGIVENESS & CHROMATIC AFTERIMAGES ]'
+      },
+      jet: {
+        gravity: 0.20,
+        jumpVel: -3.75,
+        forgiveness: 3,
+        scoreMult: 1.5, // 1.5x score booster
+        desc: '[ ⚡ ACTIVE CORE: CRIMSON SUPERSONIC JET // MECH: NITRO IMPULSE — SNAPPY ROCKET BOOST & 1.5x SCORE MULTIPLIER ]'
+      }
+    };
+
+    function getFlappyPlayerX() {
+      const w = flappyCanvas ? flappyCanvas.width : 480;
+      return (w >= 700) ? 220 : 135;
+    }
+
+    function selectFlappyCore(coreKey) {
+      if (!coreConfigs[coreKey]) return;
+      selectedCore = coreKey;
+      ['coreBtnChip', 'coreBtnDrone', 'coreBtnQuantum', 'coreBtnJet'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`coreBtn${coreKey.charAt(0).toUpperCase() + coreKey.slice(1)}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      const descEl = document.getElementById('flappyCoreSkillDesc');
+      if (descEl) descEl.innerText = coreConfigs[coreKey].desc;
+      playRoboJumpPing();
+    }
+
+    function toggleFlappyTheaterMode() {
+      isFlappyTheaterMode = !isFlappyTheaterMode;
+      const box = document.getElementById('arcadeNoirBox');
+      const btnText = document.getElementById('flappyTheaterText');
+      if (box) {
+        if (isFlappyTheaterMode) {
+          box.classList.add('theater-mode');
+          if (btnText) btnText.innerText = '[ 🗗 COMPACT MODE ]';
+          if (flappyCanvas) {
+            flappyCanvas.width = 800;
+            flappyCanvas.height = 450;
+          }
+        } else {
+          box.classList.remove('theater-mode');
+          if (btnText) btnText.innerText = '[ ⛶ THEATER MODE ]';
+          if (flappyCanvas) {
+            flappyCanvas.width = 480;
+            flappyCanvas.height = 270;
+          }
+        }
+      }
+      playPointChime();
+    }
+
+    // Procedural Robotic Audio
     function playRoboJumpPing() {
       try {
         const ctx = getAudioContext();
         if (!ctx) return;
         const now = ctx.currentTime;
-
-        // Leading square chip pulse
         const osc1 = ctx.createOscillator();
         const gain1 = ctx.createGain();
-        osc1.type = 'square';
-        osc1.frequency.setValueAtTime(420, now);
-        osc1.frequency.exponentialRampToValueAtTime(980, now + 0.065);
+        osc1.type = (selectedCore === 'jet') ? 'sawtooth' : (selectedCore === 'quantum' ? 'sine' : 'square');
+        const startFreq = (selectedCore === 'drone') ? 560 : 420;
+        const endFreq = (selectedCore === 'drone') ? 1100 : 980;
+        osc1.frequency.setValueAtTime(startFreq, now);
+        osc1.frequency.exponentialRampToValueAtTime(endFreq, now + 0.065);
         gain1.gain.setValueAtTime(0.045, now);
         gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
         osc1.connect(gain1);
         gain1.connect(ctx.destination);
         osc1.start(now);
         osc1.stop(now + 0.065);
-
-        // Sub metallic resonant pulse
-        const osc2 = ctx.createOscillator();
-        const gain2 = ctx.createGain();
-        osc2.type = 'triangle';
-        osc2.frequency.setValueAtTime(220, now);
-        osc2.frequency.linearRampToValueAtTime(110, now + 0.07);
-        gain2.gain.setValueAtTime(0.035, now);
-        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
-        osc2.connect(gain2);
-        gain2.connect(ctx.destination);
-        osc2.start(now);
-        osc2.stop(now + 0.07);
       } catch (e) {}
     }
 
-    // 2. Countdown Telemetry Blip
     function playCountdownTick(isGo = false) {
       try {
         const ctx = getAudioContext();
@@ -5866,14 +7315,11 @@
       } catch (e) {}
     }
 
-    // 3. Robo Crash & Overload Explosion (Impact Noise + Glitch Breakdown)
     function playRoboCrashSound() {
       try {
         const ctx = getAudioContext();
         if (!ctx) return;
         const now = ctx.currentTime;
-
-        // White noise crunch buffer
         const bufLen = Math.floor(ctx.sampleRate * 0.28);
         const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
         const d = buf.getChannelData(0);
@@ -5889,7 +7335,6 @@
         noiseGain.connect(ctx.destination);
         noise.start(now);
 
-        // Low robotic power-down pitch drop
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sawtooth';
@@ -5904,7 +7349,6 @@
       } catch (e) {}
     }
 
-    // 4. Point Cleared Chime
     function playPointChime() {
       try {
         const ctx = getAudioContext();
@@ -5924,37 +7368,103 @@
       } catch (e) {}
     }
 
-    // --- GAME CONTROLS & STATE MACHINE ---
+    function playSectorUpgradeChime() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+          gain.gain.setValueAtTime(0.06, now + idx * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.06);
+          osc.stop(now + idx * 0.06 + 0.2);
+        });
+      } catch (e) {}
+    }
 
     function startFlappyCountdown() {
       flappyState = 'COUNTDOWN';
       countdownVal = 3;
-      countdownTimer = 45; // ~0.75s per count at 60fps
-      birdY = 125;
+      countdownTimer = 45;
+      const h = flappyCanvas ? flappyCanvas.height : 270;
+      birdY = h / 2 - 10;
       birdVel = 0;
       flappyPipes = [];
       flappyScore = 0;
       flappyParticles = [];
+      currentThemeIndex = 0;
+      lastThemeIndex = 0;
+      sectorUpgradeBannerTimer = 0;
       playCountdownTick(false);
+    }
+
+    function emitCoreTrail(x, y) {
+      if (selectedCore === 'chip') {
+        // Binary code drift + circuit sparks
+        flappyParticles.push({
+          x: x - 4,
+          y: y + (Math.random() * 8 - 4),
+          vx: -Math.random() * 2.8 - 1.2,
+          vy: (Math.random() - 0.5) * 1.5,
+          life: 1.0,
+          type: 'binary',
+          char: Math.random() > 0.5 ? '1' : '0',
+          color: Math.random() > 0.5 ? '#00ff88' : '#00f2fe'
+        });
+      } else if (selectedCore === 'drone') {
+        // Twin cyan ion flames
+        for (let j = 0; j < 3; j++) {
+          flappyParticles.push({
+            x: x - 6,
+            y: y + (j === 0 ? -4 : 4) + (Math.random() * 2 - 1),
+            vx: -Math.random() * 3.5 - 1.5,
+            vy: (Math.random() - 0.5) * 1.2,
+            life: 0.9,
+            type: 'plasma',
+            color: j % 2 === 0 ? '#00f2fe' : '#ffffff'
+          });
+        }
+      } else if (selectedCore === 'quantum') {
+        // Chromatic afterimages
+        flappyParticles.push({
+          x: x - 4,
+          y: y,
+          vx: -Math.random() * 1.5 - 0.5,
+          vy: (Math.random() - 0.5) * 0.8,
+          life: 0.8,
+          type: 'ghost',
+          color: Math.random() > 0.5 ? '#a855f7' : '#00f2fe'
+        });
+      } else if (selectedCore === 'jet') {
+        // High-velocity rocket plume & embers
+        for (let k = 0; k < 4; k++) {
+          flappyParticles.push({
+            x: x - 8,
+            y: y + (Math.random() * 6 - 3),
+            vx: -Math.random() * 4.2 - 2.0,
+            vy: (Math.random() - 0.5) * 2.0,
+            life: 1.0,
+            type: 'fire',
+            color: Math.random() > 0.6 ? '#ff3344' : (Math.random() > 0.3 ? '#ffdf00' : '#ffffff')
+          });
+        }
+      }
     }
 
     function handleFlappyInput() {
       if (flappyState === 'IDLE' || flappyState === 'CRASHED') {
         startFlappyCountdown();
       } else if (flappyState === 'PLAYING') {
-        birdVel = -3.9;
+        const cfg = coreConfigs[selectedCore] || coreConfigs.chip;
+        birdVel = cfg.jumpVel;
         playRoboJumpPing();
-        // Thruster sparks
-        for (let i = 0; i < 5; i++) {
-          flappyParticles.push({
-            x: 46,
-            y: birdY + 10 + (Math.random() * 4 - 2),
-            vx: -Math.random() * 3 - 1.2,
-            vy: (Math.random() - 0.5) * 1.8,
-            life: 1.0,
-            color: Math.random() > 0.5 ? '#00f2fe' : '#ffdf00'
-          });
-        }
+        emitCoreTrail(getFlappyPlayerX(), birdY + 9);
       }
     }
 
@@ -5969,14 +7479,13 @@
       }, { passive: false });
     }
 
-    // Zero-scroll Space key listener
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' || e.key === ' ') {
         if (flappyCanvas) {
           const rect = flappyCanvas.getBoundingClientRect();
           const inView = (rect.top < window.innerHeight && rect.bottom > 0);
           if (inView) {
-            e.preventDefault(); // Stop default browser page scroll!
+            e.preventDefault();
             handleFlappyInput();
           }
         }
@@ -5989,14 +7498,26 @@
       const w = flappyCanvas.width;
       const h = flappyCanvas.height;
 
-      // Dark cyber canvas background
-      fCtx.fillStyle = '#04070b';
+      // Determine Theme by Score (Cycles every 10 points)
+      currentThemeIndex = Math.floor(flappyScore / 10) % flappyThemes.length;
+      if (currentThemeIndex !== lastThemeIndex && flappyState === 'PLAYING') {
+        lastThemeIndex = currentThemeIndex;
+        sectorUpgradeBannerText = `⚡ SECTOR UPGRADE: ${flappyThemes[currentThemeIndex].name} // OVERCLOCK ACTIVE`;
+        sectorUpgradeBannerTimer = 110;
+        playSectorUpgradeChime();
+      }
+
+      const curTheme = flappyThemes[currentThemeIndex];
+      const cfg = coreConfigs[selectedCore] || coreConfigs.chip;
+
+      // Cyber canvas background with theme tint
+      fCtx.fillStyle = curTheme.bg;
       fCtx.fillRect(0, 0, w, h);
 
-      // Faint moving circuit grid
-      fCtx.strokeStyle = 'rgba(0, 242, 254, 0.05)';
+      // Procedural moving circuit grid
+      fCtx.strokeStyle = curTheme.grid;
       fCtx.lineWidth = 1;
-      const gridOffset = (flappyFrame * 0.8) % 24;
+      const gridOffset = (flappyFrame * 0.9) % 24;
       for (let x = -gridOffset; x < w; x += 24) {
         fCtx.beginPath();
         fCtx.moveTo(x, 0);
@@ -6004,26 +7525,24 @@
         fCtx.stroke();
       }
 
-      // Progressive difficulty settings
-      const currentSpeed = Math.min(3.6, 1.5 + flappyScore * 0.08);
-      const currentGap = Math.max(92, 130 - flappyScore * 1.4);
-      const spawnSpacing = Math.max(160, 220 - flappyScore * 2.5);
+      // Progressive difficulty settings with generous leeway for all players
+      const playerX = getFlappyPlayerX();
+      const currentSpeed = Math.min(3.6, 1.35 + flappyScore * 0.05);
+      const currentGap = Math.max(112, 150 - flappyScore * 0.95);
+      const spawnSpacing = Math.max(180, 240 - flappyScore * 1.8);
 
       // --- STATE 1: COUNTDOWN ---
       if (flappyState === 'COUNTDOWN') {
         countdownTimer--;
-        // Hover bird smoothly
-        birdY = 125 + Math.sin(flappyFrame * 0.1) * 4;
-
+        birdY = (h / 2 - 10) + Math.sin(flappyFrame * 0.1) * 4;
         if (countdownTimer <= 0) {
           countdownVal--;
           if (countdownVal > 0) {
             countdownTimer = 45;
             playCountdownTick(false);
           } else {
-            // Launch!
             flappyState = 'PLAYING';
-            birdVel = -3.5;
+            birdVel = cfg.jumpVel * 0.8;
             playCountdownTick(true);
           }
         }
@@ -6031,12 +7550,17 @@
 
       // --- STATE 2: PLAYING ---
       if (flappyState === 'PLAYING') {
-        birdVel += flappyGravity;
+        birdVel += cfg.gravity;
         birdY += birdVel;
+
+        // Continuous trail emission from forward position
+        if (flappyFrame % 2 === 0) {
+          emitCoreTrail(playerX, birdY + 9);
+        }
 
         // Pipe spawn
         if (flappyPipes.length === 0 || flappyPipes[flappyPipes.length - 1].x < w - spawnSpacing) {
-          const topH = Math.random() * (h - currentGap - 60) + 25;
+          const topH = Math.random() * (h - currentGap - 65) + 28;
           flappyPipes.push({
             x: w,
             top: topH,
@@ -6051,35 +7575,37 @@
           p.x -= currentSpeed;
 
           // Top server rack
-          fCtx.fillStyle = '#0d1822';
-          fCtx.fillRect(p.x, 0, 38, p.top);
-          fCtx.strokeStyle = '#00ff88';
-          fCtx.lineWidth = 1.5;
-          fCtx.strokeRect(p.x, 0, 38, p.top);
+          fCtx.fillStyle = curTheme.pipeFill;
+          fCtx.fillRect(p.x, 0, 40, p.top);
+          fCtx.strokeStyle = curTheme.pipeStroke;
+          fCtx.lineWidth = 1.6;
+          fCtx.strokeRect(p.x, 0, 40, p.top);
 
           // Blinking rack LEDs
-          fCtx.fillStyle = (flappyFrame % 40 < 20) ? '#00ff88' : '#ffdf00';
+          fCtx.fillStyle = (flappyFrame % 40 < 20) ? curTheme.led1 : curTheme.led2;
           fCtx.fillRect(p.x + 8, Math.max(6, p.top - 14), 4, 4);
-          fCtx.fillStyle = '#00f2fe';
+          fCtx.fillStyle = curTheme.led2;
           fCtx.fillRect(p.x + 18, Math.max(6, p.top - 14), 4, 4);
 
           // Bottom server rack
           const bY = h - p.bottom;
-          fCtx.fillStyle = '#0d1822';
-          fCtx.fillRect(p.x, bY, 38, p.bottom);
-          fCtx.strokeStyle = '#00ff88';
-          fCtx.lineWidth = 1.5;
-          fCtx.strokeRect(p.x, bY, 38, p.bottom);
+          fCtx.fillStyle = curTheme.pipeFill;
+          fCtx.fillRect(p.x, bY, 40, p.bottom);
+          fCtx.strokeStyle = curTheme.pipeStroke;
+          fCtx.lineWidth = 1.6;
+          fCtx.strokeRect(p.x, bY, 40, p.bottom);
 
-          fCtx.fillStyle = '#00f2fe';
+          fCtx.fillStyle = curTheme.led1;
           fCtx.fillRect(p.x + 8, bY + 8, 4, 4);
-          fCtx.fillStyle = (flappyFrame % 30 < 15) ? '#ff3344' : '#00ff88';
+          fCtx.fillStyle = (flappyFrame % 30 < 15) ? curTheme.led2 : curTheme.led1;
           fCtx.fillRect(p.x + 18, bY + 8, 4, 4);
 
-          // Collision detection
+          // Collision detection with core forgiveness margin and generous leeway
+          const playerRadius = 10;
+          const fg = (cfg.forgiveness || 0) + 4;
           if (
-            (p.x < 66 && p.x + 38 > 46) &&
-            (birdY + 2 < p.top || birdY + 16 > bY)
+            (p.x < (playerX + playerRadius - fg) && (p.x + 40) > (playerX - playerRadius + fg)) &&
+            (birdY + 2 + fg < p.top || birdY + 16 - fg > bY)
           ) {
             flappyState = 'CRASHED';
             playRoboCrashSound();
@@ -6090,14 +7616,14 @@
           }
 
           // Score check
-          if (p.x + 38 < 46 && !p.passed) {
-            flappyScore++;
+          if ((p.x + 40) < (playerX - playerRadius) && !p.passed) {
+            flappyScore += (cfg.scoreMult || 1);
             p.passed = true;
             playPointChime();
           }
         }
 
-        flappyPipes = flappyPipes.filter(p => p.x > -50);
+        flappyPipes = flappyPipes.filter(p => p.x > -60);
 
         // Boundary crash
         if (birdY > h - 18 || birdY < 0) {
@@ -6112,121 +7638,208 @@
 
       // --- STATE 3: IDLE HOVER ---
       if (flappyState === 'IDLE') {
-        birdY = 125 + Math.sin(flappyFrame * 0.08) * 5;
+        birdY = (h / 2 - 10) + Math.sin(flappyFrame * 0.08) * 5;
       }
 
-      // Render Thruster Particles
+      // Render Dynamic Particles / Animated Trails
       for (let i = flappyParticles.length - 1; i >= 0; i--) {
         const pt = flappyParticles[i];
         pt.x += pt.vx;
         pt.y += pt.vy;
-        pt.life -= 0.05;
+        pt.life -= 0.045;
         if (pt.life <= 0) {
           flappyParticles.splice(i, 1);
           continue;
         }
-        fCtx.fillStyle = pt.color;
         fCtx.globalAlpha = pt.life;
-        fCtx.fillRect(pt.x, pt.y, 2.5, 2.5);
+        if (pt.type === 'binary') {
+          fCtx.fillStyle = pt.color;
+          fCtx.font = 'bold 8px "JetBrains Mono", monospace';
+          fCtx.fillText(pt.char, pt.x, pt.y);
+        } else if (pt.type === 'ghost') {
+          fCtx.fillStyle = pt.color;
+          fCtx.fillRect(pt.x, pt.y, 8, 8);
+        } else if (pt.type === 'fire') {
+          fCtx.fillStyle = pt.color;
+          fCtx.beginPath();
+          fCtx.arc(pt.x, pt.y, Math.max(1, 3.5 * pt.life), 0, Math.PI * 2);
+          fCtx.fill();
+        } else {
+          fCtx.fillStyle = pt.color;
+          fCtx.fillRect(pt.x, pt.y, 3, 3);
+        }
       }
       fCtx.globalAlpha = 1.0;
 
-      // Draw Player: 8086 Microprocessor Chip
+      // Draw Selected Player Core Avatar at forward position
       fCtx.save();
-      fCtx.translate(54, birdY + 9);
-      const tilt = (flappyState === 'PLAYING') ? Math.max(-0.4, Math.min(0.5, birdVel * 0.08)) : 0;
+      fCtx.translate(playerX, birdY + 9);
+      const tilt = (flappyState === 'PLAYING') ? Math.max(-0.45, Math.min(0.55, birdVel * 0.09)) : 0;
       fCtx.rotate(tilt);
 
-      // Gold Connector Pins
-      fCtx.fillStyle = '#ffdf00';
-      fCtx.fillRect(-12, -7, 2, 14);
-      fCtx.fillRect(10, -7, 2, 14);
-
-      // Silicon Body
-      fCtx.fillStyle = '#10141c';
-      fCtx.fillRect(-10, -8, 20, 16);
-      fCtx.strokeStyle = (flappyState === 'CRASHED') ? '#ff3344' : '#00f2fe';
-      fCtx.lineWidth = 1.5;
-      fCtx.strokeRect(-10, -8, 20, 16);
-
-      // Glowing Core LED
-      fCtx.fillStyle = (flappyState === 'CRASHED') ? '#ff3344' : '#00f2fe';
-      fCtx.shadowColor = (flappyState === 'CRASHED') ? '#ff3344' : '#00f2fe';
-      fCtx.shadowBlur = 8;
-      fCtx.fillRect(-4, -4, 8, 8);
-      fCtx.shadowBlur = 0;
-
-      fCtx.fillStyle = '#fff';
-      fCtx.font = '6px "JetBrains Mono", monospace';
-      fCtx.fillText('86', -3, 3);
-      fCtx.restore();
-
-      // Top Telemetry Header
-      fCtx.fillStyle = 'rgba(0, 0, 0, 0.65)';
-      fCtx.fillRect(0, 0, w, 28);
-      fCtx.strokeStyle = 'rgba(0, 242, 254, 0.2)';
-      fCtx.lineWidth = 1;
-      fCtx.strokeRect(0, 0, w, 28);
-
-      fCtx.font = 'bold 12px "JetBrains Mono", monospace';
-      fCtx.fillStyle = '#00ff88';
-      fCtx.fillText(`SCORE: ${flappyScore}`, 14, 18);
-
-      fCtx.fillStyle = '#ffdf00';
-      fCtx.fillText(`BEST: ${flappyHighScore}`, 110, 18);
-
-      fCtx.fillStyle = '#00f2fe';
-      fCtx.fillText(`SPEED: ${currentSpeed.toFixed(1)}x`, w - 100, 18);
-
-      // --- OVERLAY: COUNTDOWN HUD ---
-      if (flappyState === 'COUNTDOWN') {
-        fCtx.fillStyle = 'rgba(3, 6, 12, 0.65)';
-        fCtx.fillRect(0, 28, w, h - 28);
-
-        fCtx.font = 'bold 13px "JetBrains Mono", monospace';
-        fCtx.fillStyle = 'var(--accent-yellow)';
+      if (selectedCore === 'chip') {
+        // --- Core 1: 8086 Microprocessor ---
         fCtx.fillStyle = '#ffdf00';
-        fCtx.textAlign = 'center';
-        fCtx.fillText('INITIALIZING 8086 CORE ARCHITECTURE...', w / 2, h / 2 - 20);
+        fCtx.fillRect(-12, -7, 2, 14);
+        fCtx.fillRect(10, -7, 2, 14);
+        fCtx.fillStyle = '#10141c';
+        fCtx.fillRect(-10, -8, 20, 16);
+        fCtx.strokeStyle = (flappyState === 'CRASHED') ? '#ff3344' : curTheme.pipeStroke;
+        fCtx.lineWidth = 1.5;
+        fCtx.strokeRect(-10, -8, 20, 16);
+        fCtx.fillStyle = (flappyState === 'CRASHED') ? '#ff3344' : curTheme.led1;
+        fCtx.shadowColor = curTheme.led1;
+        fCtx.shadowBlur = 8;
+        fCtx.fillRect(-4, -4, 8, 8);
+        fCtx.shadowBlur = 0;
+        fCtx.fillStyle = '#fff';
+        fCtx.font = '6px "JetBrains Mono", monospace';
+        fCtx.fillText('86', -3, 3);
 
-        fCtx.font = 'bold 36px "Syne", sans-serif';
+      } else if (selectedCore === 'drone') {
+        // --- Core 2: Cyber Recon Drone ---
+        fCtx.fillStyle = '#0f172a';
+        fCtx.beginPath();
+        fCtx.ellipse(0, 0, 12, 7, 0, 0, Math.PI * 2);
+        fCtx.fill();
+        fCtx.strokeStyle = '#00f2fe';
+        fCtx.lineWidth = 1.5;
+        fCtx.stroke();
+        // Cyan Ocular Visor
         fCtx.fillStyle = '#00f2fe';
         fCtx.shadowColor = '#00f2fe';
+        fCtx.shadowBlur = 10;
+        fCtx.fillRect(2, -2, 7, 4);
+        fCtx.shadowBlur = 0;
+        // Twin thrusters
+        fCtx.fillStyle = '#475569';
+        fCtx.fillRect(-11, -6, 4, 3);
+        fCtx.fillRect(-11, 3, 4, 3);
+
+      } else if (selectedCore === 'quantum') {
+        // --- Core 3: Quantum Tesseract ---
+        fCtx.save();
+        fCtx.rotate(flappyFrame * 0.05);
+        fCtx.strokeStyle = '#a855f7';
+        fCtx.lineWidth = 1.8;
+        fCtx.shadowColor = '#a855f7';
+        fCtx.shadowBlur = 12;
+        fCtx.strokeRect(-8, -8, 16, 16);
+        fCtx.rotate(Math.PI / 4);
+        fCtx.strokeStyle = '#00f2fe';
+        fCtx.strokeRect(-6, -6, 12, 12);
+        fCtx.shadowBlur = 0;
+        fCtx.fillStyle = '#ffffff';
+        fCtx.fillRect(-2, -2, 4, 4);
+        fCtx.restore();
+
+      } else if (selectedCore === 'jet') {
+        // --- Core 4: Crimson MAYO Supersonic Jet ---
+        fCtx.fillStyle = '#1e0508';
+        fCtx.strokeStyle = '#ff3344';
+        fCtx.lineWidth = 1.6;
+        fCtx.beginPath();
+        fCtx.moveTo(14, 0);
+        fCtx.lineTo(-10, -7);
+        fCtx.lineTo(-6, 0);
+        fCtx.lineTo(-10, 7);
+        fCtx.closePath();
+        fCtx.fill();
+        fCtx.stroke();
+        // Cockpit canopy
+        fCtx.fillStyle = '#ffdf00';
+        fCtx.shadowColor = '#ffdf00';
+        fCtx.shadowBlur = 6;
+        fCtx.fillRect(0, -2, 6, 4);
+        fCtx.shadowBlur = 0;
+      }
+
+      fCtx.restore();
+
+      // Top Telemetry Bar with Sector Theme Info
+      fCtx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+      fCtx.fillRect(0, 0, w, 30);
+      fCtx.strokeStyle = curTheme.pipeStroke;
+      fCtx.lineWidth = 1;
+      fCtx.strokeRect(0, 0, w, 30);
+
+      fCtx.font = 'bold 12px "JetBrains Mono", monospace';
+      fCtx.fillStyle = curTheme.hud;
+      fCtx.fillText(`SCORE: ${flappyScore}`, 14, 19);
+
+      fCtx.fillStyle = '#ffdf00';
+      fCtx.fillText(`BEST: ${flappyHighScore}`, isFlappyTheaterMode ? 140 : 105, 19);
+
+      fCtx.fillStyle = '#fff';
+      fCtx.font = '10px "JetBrains Mono", monospace';
+      fCtx.fillText(`SECTOR: ${curTheme.name.split(' ')[0]}`, isFlappyTheaterMode ? 260 : 190, 19);
+
+      fCtx.fillStyle = curTheme.hud;
+      fCtx.font = 'bold 11px "JetBrains Mono", monospace';
+      fCtx.fillText(`SPEED: ${currentSpeed.toFixed(1)}x`, w - (isFlappyTheaterMode ? 110 : 90), 19);
+
+      // On-Screen Sector Upgrade Notification Banner
+      if (sectorUpgradeBannerTimer > 0) {
+        sectorUpgradeBannerTimer--;
+        const alpha = Math.min(1.0, sectorUpgradeBannerTimer / 25);
+        fCtx.save();
+        fCtx.globalAlpha = alpha;
+        fCtx.fillStyle = 'rgba(0, 0, 0, 0.88)';
+        fCtx.fillRect(w / 2 - 190, 36, 380, 26);
+        fCtx.strokeStyle = curTheme.hud;
+        fCtx.lineWidth = 1.5;
+        fCtx.strokeRect(w / 2 - 190, 36, 380, 26);
+
+        fCtx.fillStyle = curTheme.hud;
+        fCtx.font = 'bold 11px "JetBrains Mono", monospace';
+        fCtx.textAlign = 'center';
+        fCtx.fillText(sectorUpgradeBannerText, w / 2, 53);
+        fCtx.restore();
+      }
+
+      // --- OVERLAYS ---
+      if (flappyState === 'COUNTDOWN') {
+        fCtx.fillStyle = 'rgba(3, 6, 12, 0.65)';
+        fCtx.fillRect(0, 30, w, h - 30);
+        fCtx.font = 'bold 12px "JetBrains Mono", monospace';
+        fCtx.fillStyle = '#ffdf00';
+        fCtx.textAlign = 'center';
+        fCtx.fillText(`SYNCHRONIZING CORE: ${selectedCore.toUpperCase()}...`, w / 2, h / 2 - 20);
+
+        fCtx.font = 'bold 36px "Syne", sans-serif';
+        fCtx.fillStyle = curTheme.hud;
+        fCtx.shadowColor = curTheme.hud;
         fCtx.shadowBlur = 12;
         fCtx.fillText(countdownVal > 0 ? `[ ${countdownVal} ]` : '[ LAUNCH! ]', w / 2, h / 2 + 20);
         fCtx.shadowBlur = 0;
         fCtx.textAlign = 'left';
       }
 
-      // --- OVERLAY: IDLE START SCREEN ---
       if (flappyState === 'IDLE') {
-        fCtx.fillStyle = 'rgba(3, 6, 12, 0.7)';
-        fCtx.fillRect(0, 28, w, h - 28);
-
+        fCtx.fillStyle = 'rgba(3, 6, 12, 0.72)';
+        fCtx.fillRect(0, 30, w, h - 30);
         fCtx.font = 'bold 15px "Syne", sans-serif';
-        fCtx.fillStyle = '#00f2fe';
+        fCtx.fillStyle = curTheme.hud;
         fCtx.textAlign = 'center';
-        fCtx.fillText('8086 BIT-JUMPER // SYSTEM STANDBY', w / 2, h / 2 - 12);
+        fCtx.fillText('RETRO ARCADE // SYSTEM STANDBY', w / 2, h / 2 - 14);
 
         fCtx.font = '11px "JetBrains Mono", monospace';
         fCtx.fillStyle = '#00ff88';
-        fCtx.fillText('PRESS [SPACE] OR CLICK CANVAS TO LAUNCH', w / 2, h / 2 + 16);
+        fCtx.fillText('PRESS [SPACE] OR CLICK CANVAS TO COMMENCE', w / 2, h / 2 + 14);
         fCtx.textAlign = 'left';
       }
 
-      // --- OVERLAY: CRASHED SCREEN ---
       if (flappyState === 'CRASHED') {
         fCtx.fillStyle = 'rgba(3, 6, 12, 0.88)';
-        fCtx.fillRect(0, 28, w, h - 28);
-
+        fCtx.fillRect(0, 30, w, h - 30);
         fCtx.font = 'bold 16px "Syne", sans-serif';
         fCtx.fillStyle = '#ff3344';
         fCtx.textAlign = 'center';
-        fCtx.fillText('SYSTEM OVERHEAT // CORE CRASHED', w / 2, h / 2 - 12);
+        fCtx.fillText('SYSTEM OVERHEAT // CORE OVERLOAD', w / 2, h / 2 - 14);
 
         fCtx.font = '11px "JetBrains Mono", monospace';
-        fCtx.fillStyle = '#00f2fe';
-        fCtx.fillText('CLICK CANVAS OR PRESS [SPACE] TO REBOOT', w / 2, h / 2 + 16);
+        fCtx.fillStyle = curTheme.hud;
+        fCtx.fillText('CLICK CANVAS OR PRESS [SPACE] TO REBOOT CORE', w / 2, h / 2 + 14);
         fCtx.textAlign = 'left';
       }
 
