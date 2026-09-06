@@ -54,3 +54,10 @@ Meraki Alpas Youth Organization Founder & Executive Chair
 Full-Stack Engineer, Systems Architect, Hardware/Assembly Developer
 
 Built with obsession, not templates.
+
+## Live Deployment
+
+- **Primary Vercel Production**: [https://noir-et-blancc66dev.vercel.app](https://noir-et-blancc66dev.vercel.app)
+- **Alternative Mirror**: [https://noiretblancc66dev.vercel.app](https://noiretblancc66dev.vercel.app)
+- **GitHub Pages Fallback**: [https://nbyakul31-prog.github.io/noir-portfolio/](https://nbyakul31-prog.github.io/noir-portfolio/)
+
