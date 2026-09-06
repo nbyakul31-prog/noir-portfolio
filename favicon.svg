@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#06090e" stroke="#00f2fe" stroke-width="2" stroke-opacity="0.5"/>
+  <path d="M0 32h64M32 0v64" stroke="#00f2fe" stroke-width="0.5" stroke-opacity="0.25"/>
+  <!-- Beanie Crown / Greyhat Dome -->
+  <path d="M16 38 C16 20, 26 14, 32 14 C38 14, 48 20, 48 38 Z" fill="#64748b"/>
+  <path d="M22 38 C22 24, 28 18, 32 15 C36 18, 42 24, 42 38" stroke="#475569" stroke-width="1.5" fill="none"/>
+  <path d="M27 38 C27 26, 30 20, 32 16 C34 20, 37 26, 37 38" stroke="#334155" stroke-width="1.5" fill="none"/>
+  <!-- Beanie folded cuff / brim -->
+  <rect x="13" y="37" width="38" height="9" rx="3" fill="#334155" stroke="#475569" stroke-width="1"/>
+  <!-- Glowing Cyber Visor slit -->
+  <rect x="18" y="48" width="28" height="4" rx="2" fill="#00f2fe"/>
+  <circle cx="24" cy="50" r="1.5" fill="#ffffff"/>
+  <circle cx="40" cy="50" r="1.5" fill="#ffffff"/>
+  <!-- Top Beanie Button / Knot -->
+  <circle cx="32" cy="13" r="3" fill="#94a3b8"/>
+</svg>

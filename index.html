@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Greyhat / Beanie Hacker Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2306090e%22%20stroke%3D%22%2300f2fe%22%20stroke-width%3D%222%22%20stroke-opacity%3D%220.5%22/%3E%0A%20%20%3Cpath%20d%3D%22M0%2032h64M32%200v64%22%20stroke%3D%22%2300f2fe%22%20stroke-width%3D%220.5%22%20stroke-opacity%3D%220.25%22/%3E%0A%20%20%3C%21--%20Beanie%20Crown%20/%20Greyhat%20Dome%20--%3E%0A%20%20%3Cpath%20d%3D%22M16%2038%20C16%2020%2C%2026%2014%2C%2032%2014%20C38%2014%2C%2048%2020%2C%2048%2038%20Z%22%20fill%3D%22%2364748b%22/%3E%0A%20%20%3Cpath%20d%3D%22M22%2038%20C22%2024%2C%2028%2018%2C%2032%2015%20C36%2018%2C%2042%2024%2C%2042%2038%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22/%3E%0A%20%20%3Cpath%20d%3D%22M27%2038%20C27%2026%2C%2030%2020%2C%2032%2016%20C34%2020%2C%2037%2026%2C%2037%2038%22%20stroke%3D%22%23334155%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22/%3E%0A%20%20%3C%21--%20Beanie%20folded%20cuff%20/%20brim%20--%3E%0A%20%20%3Crect%20x%3D%2213%22%20y%3D%2237%22%20width%3D%2238%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%23334155%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221%22/%3E%0A%20%20%3C%21--%20Glowing%20Cyber%20Visor%20slit%20--%3E%0A%20%20%3Crect%20x%3D%2218%22%20y%3D%2248%22%20width%3D%2228%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%2300f2fe%22/%3E%0A%20%20%3Ccircle%20cx%3D%2224%22%20cy%3D%2250%22%20r%3D%221.5%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%3Ccircle%20cx%3D%2240%22%20cy%3D%2250%22%20r%3D%221.5%22%20fill%3D%22%23ffffff%22/%3E%0A%20%20%3C%21--%20Top%20Beanie%20Button%20/%20Knot%20--%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2213%22%20r%3D%223%22%20fill%3D%22%2394a3b8%22/%3E%0A%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="apple-touch-icon" href="./favicon.svg">
+  <meta name="theme-color" content="#06090e">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NOIR // CONFIDENTIAL DOSSIER — Luigi Emanuel Britania</title>
   <meta name="description" content="Classified Portfolio Dossier of Luigi Emanuel Britania — Executive Chairperson of MAYO, ASEAN Youth Summit 2026 Philippine Delegate, and BSIT College Student at Quezon City University.">
@@ -5787,7 +5793,7 @@
     renderMarqueeCarousels();
 
     // =========================================================================
-    // FLAPPY DEV 8086 RETRO GAME ENGINE (SMOOTH PROGRESSION + ZERO SPACE-SCROLL)
+    // FLAPPY DEV 8086 RETRO GAME ENGINE (COUNTDOWN START + ROBO SFX + ZERO SCROLL)
     // =========================================================================
     const flappyCanvas = document.getElementById('flappyCanvas');
     const fCtx = flappyCanvas ? flappyCanvas.getContext('2d') : null;
@@ -5797,33 +5803,154 @@
     let flappyPipes = [];
     let flappyScore = 0;
     let flappyHighScore = parseInt(localStorage.getItem('noir_flappy_best') || '0', 10);
-    let isFlappyDead = false;
+    let flappyState = 'IDLE'; // 'IDLE' | 'COUNTDOWN' | 'PLAYING' | 'CRASHED'
+    let countdownVal = 3;
+    let countdownTimer = 0;
     let flappyParticles = [];
     let flappyFrame = 0;
 
-    function resetFlappy() {
-      birdY = 120;
-      birdVel = -4.0;
-      flappyPipes = [];
-      flappyScore = 0;
-      isFlappyDead = false;
-      flappyParticles = [];
-      play8BitTone(600, 0.08, 'square');
+    // --- PROCEDURAL ROBOTIC SYNTHESIZER SFX ---
+
+    // 1. Robo Jump Ping (Crisp Dual-Oscillator Thruster Pulse)
+    function playRoboJumpPing() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // Leading square chip pulse
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'square';
+        osc1.frequency.setValueAtTime(420, now);
+        osc1.frequency.exponentialRampToValueAtTime(980, now + 0.065);
+        gain1.gain.setValueAtTime(0.045, now);
+        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.065);
+
+        // Sub metallic resonant pulse
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(220, now);
+        osc2.frequency.linearRampToValueAtTime(110, now + 0.07);
+        gain2.gain.setValueAtTime(0.035, now);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now);
+        osc2.stop(now + 0.07);
+      } catch (e) {}
     }
 
-    function flappyJump() {
-      if (isFlappyDead) {
-        resetFlappy();
-      } else {
+    // 2. Countdown Telemetry Blip
+    function playCountdownTick(isGo = false) {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        const freq = isGo ? 1040 : (440 + (3 - countdownVal) * 160);
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + (isGo ? 0.16 : 0.08));
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + (isGo ? 0.16 : 0.08));
+      } catch (e) {}
+    }
+
+    // 3. Robo Crash & Overload Explosion (Impact Noise + Glitch Breakdown)
+    function playRoboCrashSound() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // White noise crunch buffer
+        const bufLen = Math.floor(ctx.sampleRate * 0.28);
+        const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufLen; i++) {
+          d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.09));
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buf;
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.12, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+        noise.connect(noiseGain);
+        noiseGain.connect(ctx.destination);
+        noise.start(now);
+
+        // Low robotic power-down pitch drop
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(280, now);
+        osc.frequency.exponentialRampToValueAtTime(35, now + 0.45);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } catch (e) {}
+    }
+
+    // 4. Point Cleared Chime
+    function playPointChime() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(940, now);
+        osc.frequency.setValueAtTime(1280, now + 0.04);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.14);
+      } catch (e) {}
+    }
+
+    // --- GAME CONTROLS & STATE MACHINE ---
+
+    function startFlappyCountdown() {
+      flappyState = 'COUNTDOWN';
+      countdownVal = 3;
+      countdownTimer = 45; // ~0.75s per count at 60fps
+      birdY = 125;
+      birdVel = 0;
+      flappyPipes = [];
+      flappyScore = 0;
+      flappyParticles = [];
+      playCountdownTick(false);
+    }
+
+    function handleFlappyInput() {
+      if (flappyState === 'IDLE' || flappyState === 'CRASHED') {
+        startFlappyCountdown();
+      } else if (flappyState === 'PLAYING') {
         birdVel = -3.9;
-        play8BitTone(750, 0.06, 'triangle');
-        // Spawn engine thruster particles
-        for (let i = 0; i < 4; i++) {
+        playRoboJumpPing();
+        // Thruster sparks
+        for (let i = 0; i < 5; i++) {
           flappyParticles.push({
             x: 46,
             y: birdY + 10 + (Math.random() * 4 - 2),
-            vx: -Math.random() * 2.5 - 1,
-            vy: (Math.random() - 0.5) * 1.5,
+            vx: -Math.random() * 3 - 1.2,
+            vy: (Math.random() - 0.5) * 1.8,
             life: 1.0,
             color: Math.random() > 0.5 ? '#00f2fe' : '#ffdf00'
           });
@@ -5834,45 +5961,27 @@
     if (flappyCanvas) {
       flappyCanvas.addEventListener('click', (e) => {
         e.preventDefault();
-        flappyJump();
+        handleFlappyInput();
       });
-      // Touch support for mobile phones & tablets
       flappyCanvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        flappyJump();
+        handleFlappyInput();
       }, { passive: false });
     }
 
-    // Key listener with strict preventDefault on Space
+    // Zero-scroll Space key listener
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' || e.key === ' ') {
         if (flappyCanvas) {
           const rect = flappyCanvas.getBoundingClientRect();
           const inView = (rect.top < window.innerHeight && rect.bottom > 0);
           if (inView) {
-            e.preventDefault(); // Stop default page scroll!
-            flappyJump();
+            e.preventDefault(); // Stop default browser page scroll!
+            handleFlappyInput();
           }
         }
       }
     });
-
-    function play8BitTone(freq, duration, waveType = 'square') {
-      try {
-        const ctx = getAudioContext();
-        if (!ctx) return;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = waveType;
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        gain.gain.setValueAtTime(0.04, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + duration);
-      } catch (err) {}
-    }
 
     function runFlappyEngine() {
       if (!flappyCanvas || !fCtx) return;
@@ -5880,11 +5989,11 @@
       const w = flappyCanvas.width;
       const h = flappyCanvas.height;
 
-      // Dark cyber background with scrolling circuit grid
+      // Dark cyber canvas background
       fCtx.fillStyle = '#04070b';
       fCtx.fillRect(0, 0, w, h);
 
-      // Moving faint vertical circuit lines
+      // Faint moving circuit grid
       fCtx.strokeStyle = 'rgba(0, 242, 254, 0.05)';
       fCtx.lineWidth = 1;
       const gridOffset = (flappyFrame * 0.8) % 24;
@@ -5895,14 +6004,33 @@
         fCtx.stroke();
       }
 
-      // Progressive difficulty: starts gentle at 1.5, caps at 3.6
+      // Progressive difficulty settings
       const currentSpeed = Math.min(3.6, 1.5 + flappyScore * 0.08);
-      // Generous starting gap of 130px, gradually down to 92px
       const currentGap = Math.max(92, 130 - flappyScore * 1.4);
-      // Pipe spacing starts at 220px, narrows to 160px
       const spawnSpacing = Math.max(160, 220 - flappyScore * 2.5);
 
-      if (!isFlappyDead) {
+      // --- STATE 1: COUNTDOWN ---
+      if (flappyState === 'COUNTDOWN') {
+        countdownTimer--;
+        // Hover bird smoothly
+        birdY = 125 + Math.sin(flappyFrame * 0.1) * 4;
+
+        if (countdownTimer <= 0) {
+          countdownVal--;
+          if (countdownVal > 0) {
+            countdownTimer = 45;
+            playCountdownTick(false);
+          } else {
+            // Launch!
+            flappyState = 'PLAYING';
+            birdVel = -3.5;
+            playCountdownTick(true);
+          }
+        }
+      }
+
+      // --- STATE 2: PLAYING ---
+      if (flappyState === 'PLAYING') {
         birdVel += flappyGravity;
         birdY += birdVel;
 
@@ -5917,7 +6045,7 @@
           });
         }
 
-        // Process pipes (server racks)
+        // Draw and process server racks
         for (let i = 0; i < flappyPipes.length; i++) {
           const p = flappyPipes[i];
           p.x -= currentSpeed;
@@ -5929,7 +6057,7 @@
           fCtx.lineWidth = 1.5;
           fCtx.strokeRect(p.x, 0, 38, p.top);
 
-          // Rack LED indicators
+          // Blinking rack LEDs
           fCtx.fillStyle = (flappyFrame % 40 < 20) ? '#00ff88' : '#ffdf00';
           fCtx.fillRect(p.x + 8, Math.max(6, p.top - 14), 4, 4);
           fCtx.fillStyle = '#00f2fe';
@@ -5948,33 +6076,33 @@
           fCtx.fillStyle = (flappyFrame % 30 < 15) ? '#ff3344' : '#00ff88';
           fCtx.fillRect(p.x + 18, bY + 8, 4, 4);
 
-          // Collision detection (with a 2px forgiving margin)
+          // Collision detection
           if (
             (p.x < 66 && p.x + 38 > 46) &&
             (birdY + 2 < p.top || birdY + 16 > bY)
           ) {
-            isFlappyDead = true;
-            play8BitTone(180, 0.35, 'sawtooth');
+            flappyState = 'CRASHED';
+            playRoboCrashSound();
             if (flappyScore > flappyHighScore) {
               flappyHighScore = flappyScore;
               localStorage.setItem('noir_flappy_best', flappyHighScore);
             }
           }
 
-          // Score point
+          // Score check
           if (p.x + 38 < 46 && !p.passed) {
             flappyScore++;
             p.passed = true;
-            play8BitTone(920, 0.1, 'sine');
+            playPointChime();
           }
         }
 
         flappyPipes = flappyPipes.filter(p => p.x > -50);
 
-        // Floor / Ceiling crash
+        // Boundary crash
         if (birdY > h - 18 || birdY < 0) {
-          isFlappyDead = true;
-          play8BitTone(150, 0.3, 'sawtooth');
+          flappyState = 'CRASHED';
+          playRoboCrashSound();
           if (flappyScore > flappyHighScore) {
             flappyHighScore = flappyScore;
             localStorage.setItem('noir_flappy_best', flappyHighScore);
@@ -5982,7 +6110,12 @@
         }
       }
 
-      // Update & draw thruster particle trail
+      // --- STATE 3: IDLE HOVER ---
+      if (flappyState === 'IDLE') {
+        birdY = 125 + Math.sin(flappyFrame * 0.08) * 5;
+      }
+
+      // Render Thruster Particles
       for (let i = flappyParticles.length - 1; i >= 0; i--) {
         const pt = flappyParticles[i];
         pt.x += pt.vx;
@@ -6001,37 +6134,35 @@
       // Draw Player: 8086 Microprocessor Chip
       fCtx.save();
       fCtx.translate(54, birdY + 9);
-      // Tilt chip based on velocity
-      const tilt = Math.max(-0.4, Math.min(0.5, birdVel * 0.08));
+      const tilt = (flappyState === 'PLAYING') ? Math.max(-0.4, Math.min(0.5, birdVel * 0.08)) : 0;
       fCtx.rotate(tilt);
 
-      // Gold Pins
+      // Gold Connector Pins
       fCtx.fillStyle = '#ffdf00';
       fCtx.fillRect(-12, -7, 2, 14);
       fCtx.fillRect(10, -7, 2, 14);
 
-      // Black Silicon Body
+      // Silicon Body
       fCtx.fillStyle = '#10141c';
       fCtx.fillRect(-10, -8, 20, 16);
-      fCtx.strokeStyle = '#00f2fe';
+      fCtx.strokeStyle = (flappyState === 'CRASHED') ? '#ff3344' : '#00f2fe';
       fCtx.lineWidth = 1.5;
       fCtx.strokeRect(-10, -8, 20, 16);
 
-      // Cyan Core LED
-      fCtx.fillStyle = isFlappyDead ? '#ff3344' : '#00f2fe';
-      fCtx.shadowColor = isFlappyDead ? '#ff3344' : '#00f2fe';
+      // Glowing Core LED
+      fCtx.fillStyle = (flappyState === 'CRASHED') ? '#ff3344' : '#00f2fe';
+      fCtx.shadowColor = (flappyState === 'CRASHED') ? '#ff3344' : '#00f2fe';
       fCtx.shadowBlur = 8;
       fCtx.fillRect(-4, -4, 8, 8);
       fCtx.shadowBlur = 0;
 
-      // Micro text "8086"
       fCtx.fillStyle = '#fff';
       fCtx.font = '6px "JetBrains Mono", monospace';
       fCtx.fillText('86', -3, 3);
       fCtx.restore();
 
-      // HUD Telemetry Header
-      fCtx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      // Top Telemetry Header
+      fCtx.fillStyle = 'rgba(0, 0, 0, 0.65)';
       fCtx.fillRect(0, 0, w, 28);
       fCtx.strokeStyle = 'rgba(0, 242, 254, 0.2)';
       fCtx.lineWidth = 1;
@@ -6044,23 +6175,58 @@
       fCtx.fillStyle = '#ffdf00';
       fCtx.fillText(`BEST: ${flappyHighScore}`, 110, 18);
 
-      fCtx.fillStyle = 'var(--accent-cyan)';
       fCtx.fillStyle = '#00f2fe';
       fCtx.fillText(`SPEED: ${currentSpeed.toFixed(1)}x`, w - 100, 18);
 
-      // Dead overlay
-      if (isFlappyDead) {
-        fCtx.fillStyle = 'rgba(3, 6, 12, 0.85)';
+      // --- OVERLAY: COUNTDOWN HUD ---
+      if (flappyState === 'COUNTDOWN') {
+        fCtx.fillStyle = 'rgba(3, 6, 12, 0.65)';
+        fCtx.fillRect(0, 28, w, h - 28);
+
+        fCtx.font = 'bold 13px "JetBrains Mono", monospace';
+        fCtx.fillStyle = 'var(--accent-yellow)';
+        fCtx.fillStyle = '#ffdf00';
+        fCtx.textAlign = 'center';
+        fCtx.fillText('INITIALIZING 8086 CORE ARCHITECTURE...', w / 2, h / 2 - 20);
+
+        fCtx.font = 'bold 36px "Syne", sans-serif';
+        fCtx.fillStyle = '#00f2fe';
+        fCtx.shadowColor = '#00f2fe';
+        fCtx.shadowBlur = 12;
+        fCtx.fillText(countdownVal > 0 ? `[ ${countdownVal} ]` : '[ LAUNCH! ]', w / 2, h / 2 + 20);
+        fCtx.shadowBlur = 0;
+        fCtx.textAlign = 'left';
+      }
+
+      // --- OVERLAY: IDLE START SCREEN ---
+      if (flappyState === 'IDLE') {
+        fCtx.fillStyle = 'rgba(3, 6, 12, 0.7)';
+        fCtx.fillRect(0, 28, w, h - 28);
+
+        fCtx.font = 'bold 15px "Syne", sans-serif';
+        fCtx.fillStyle = '#00f2fe';
+        fCtx.textAlign = 'center';
+        fCtx.fillText('8086 BIT-JUMPER // SYSTEM STANDBY', w / 2, h / 2 - 12);
+
+        fCtx.font = '11px "JetBrains Mono", monospace';
+        fCtx.fillStyle = '#00ff88';
+        fCtx.fillText('PRESS [SPACE] OR CLICK CANVAS TO LAUNCH', w / 2, h / 2 + 16);
+        fCtx.textAlign = 'left';
+      }
+
+      // --- OVERLAY: CRASHED SCREEN ---
+      if (flappyState === 'CRASHED') {
+        fCtx.fillStyle = 'rgba(3, 6, 12, 0.88)';
         fCtx.fillRect(0, 28, w, h - 28);
 
         fCtx.font = 'bold 16px "Syne", sans-serif';
         fCtx.fillStyle = '#ff3344';
         fCtx.textAlign = 'center';
-        fCtx.fillText('SYSTEM OVERHEAT // CRASHED', w / 2, h / 2 - 10);
+        fCtx.fillText('SYSTEM OVERHEAT // CORE CRASHED', w / 2, h / 2 - 12);
 
         fCtx.font = '11px "JetBrains Mono", monospace';
         fCtx.fillStyle = '#00f2fe';
-        fCtx.fillText('CLICK CANVAS OR PRESS [SPACE] TO REBOOT CORE', w / 2, h / 2 + 18);
+        fCtx.fillText('CLICK CANVAS OR PRESS [SPACE] TO REBOOT', w / 2, h / 2 + 16);
         fCtx.textAlign = 'left';
       }
 
